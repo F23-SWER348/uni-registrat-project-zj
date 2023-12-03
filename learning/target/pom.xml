@@ -14,8 +14,13 @@
 
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+<<<<<<< HEAD:learning/pom.xml
     <maven.compiler.source>21</maven.compiler.source>
     <maven.compiler.target>21</maven.compiler.target>
+=======
+    <maven.compiler.source>20</maven.compiler.source>
+    <maven.compiler.target>20</maven.compiler.target>
+>>>>>>> 35c3350e36aaf8f62d75b3936ddd86c650f93c49:learning/target/pom.xml
   </properties>
 
   <dependencies>
