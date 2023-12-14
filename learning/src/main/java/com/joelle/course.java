@@ -1,38 +1,59 @@
 package com.joelle;
 
-import javax.xml.crypto.Data;
+import java.util.ArrayList;
+import java.util.List;
 
 public class course {
-   /*  Class Course:
-• Data Fields:
-رقم تعريف الدورة : courseID .
-اسم الدورة : " coursellane "
-كائن يمثل الأستاذ المسؤول عن الدورة : " faculty
-قائمة بالطلاب المسجلين في الدورة : studentsEnrolled
-عدد الوحدات الدراسية للدورة : " oredita"
-قائمة
-بأوقات وتواريخ المحاضرات الدورة : " schedule .
-Methods:
-"addStudent (student( : ا يضيف طالب إلى الدورة
-"removeStudent(student
-( : يزيل طالب من الدورة
-listEnrolledStudents )( : يعرض الطلاب المسجلين في الدورة
-يرجع رقم تعريف الدورة : " ( ) getCourseID
-"getCourseName)( : يُرجع اسم الدورة
-ترجع الأستاذ المسؤول عن الدورة : " ( ) getFaculty
-أرجع بوحدات الدراسية للدورة : " ( ) getCredits
-'getSchedule)( : أرده
-dits
-'getSchedule)( : أرده
-removestudent(student( : يزيل طالب من الثورة
-listEnrolledStudenta )( : يعرض الطلاب المسجلين في الدورة
-يرجع رقم تعريف الدورة : ( ) BetCourseID"
-getCourseName)(" : ترجع اسم الدورة
-يرجع الأستاذ المسؤول عن الدورة : " () getFaculty
-مرجع يرجع جدول المحاضرات الدورة : " ( ) getSchedule
-عدد الوحدات الدراسية للدورة : " ( ) petCredita"
-"addLecture Time (lectureTime( : يضيف
+    private int courseID;
+    private String courseName;
+    private faculty faculty;
+    private List<student> studentsEnrolled = new ArrayList<>();
+    private int credits;
+    private List<lectureTime> schedule = new ArrayList<>();
 
+    public void addStudent(student student) {
+        studentsEnrolled.add(student);
+    }
 
-*/
+    public void removeStudent(student student) {
+        studentsEnrolled.remove(student);
+    }
+
+    public List<student> listEnrolledStudents() {
+        return studentsEnrolled;
+    }
+
+    public int getCourseID() {
+        return courseID;
+    }
+
+    public String getCourseName() {
+        return courseName;
+    }
+
+    public course(int courseID, String courseName, com.joelle.faculty faculty, List<student> studentsEnrolled,
+      int credits, List<lectureTime> schedule) {
+      this.courseID = courseID;
+      this.courseName = courseName;
+      this.faculty = faculty;
+      this.studentsEnrolled = studentsEnrolled;
+      this.credits = credits;
+      this.schedule = schedule;
+   }
+
+   public faculty getFaculty() {
+        return faculty;
+    }
+
+    public int getCredits() {
+        return credits;
+    }
+
+    public List<lectureTime> getSchedule() {
+        return schedule;
+    }
+
+    public void addLectureTime(lectureTime lectureTime) {
+        schedule.add(lectureTime);
+    }
 }

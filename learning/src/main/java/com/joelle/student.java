@@ -1,5 +1,7 @@
 package com.joelle;
 
+import java.util.HashMap;
+import java.util.Map;
 
 public class student {
     private long id;
@@ -7,9 +9,7 @@ public class student {
     private String major;
     private double gpa;
     private static long count = 1;
-    
-
-
+    private Map<course, Double> grades = new HashMap<>();
     
     public student(String name, String major, double gpa) {
         this.id = count++;

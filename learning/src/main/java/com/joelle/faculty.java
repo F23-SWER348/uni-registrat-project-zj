@@ -13,6 +13,8 @@ public class faculty {
         this.contactDetails = contactDetails;
     }
 
+ 
+
     public int getFacultyID() {
         return facultyID;
     }
