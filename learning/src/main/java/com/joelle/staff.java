@@ -1,7 +1,7 @@
 package com.joelle;
 
 public class staff {
-    public class Staff {
+    public class Staff implements user{
         // Data Fields
         private String staffID;
         private String name;
@@ -52,6 +52,18 @@ public class staff {
         public void assignToProject(String projectName) {
             // Add logic to assign the staff to a project
             System.out.println(name + " has been assigned to the project: " + projectName);
+        }
+
+        @Override
+        public String getContactDetails() {
+            // TODO Auto-generated method stub
+            throw new UnsupportedOperationException("Unimplemented method 'getContactDetails'");
+        }
+
+        @Override
+        public UserRole getRole() {
+            // TODO Auto-generated method stub
+            throw new UnsupportedOperationException("Unimplemented method 'getRole'");
         }
     }
 }

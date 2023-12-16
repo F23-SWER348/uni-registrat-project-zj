@@ -40,7 +40,13 @@ public class course {
       this.credits = credits;
       this.schedule = schedule;
    }
+   private List<String> prerequisites;
 
+   // Constructor and other methods...
+
+   public List<String> getPrerequisites() {
+       return prerequisites;
+   }
    public faculty getFaculty() {
         return faculty;
     }
