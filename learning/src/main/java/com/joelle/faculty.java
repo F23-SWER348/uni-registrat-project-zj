@@ -1,7 +1,7 @@
 package com.joelle;
 
 
-public class faculty {
+public class faculty implements user{
   
     private int facultyID;
     private String name;
@@ -13,6 +13,8 @@ public class faculty {
         this.contactDetails = contactDetails;
     }
 
+ 
+
     public int getFacultyID() {
         return facultyID;
     }
@@ -23,5 +25,13 @@ public class faculty {
 
     public String getContactDetails() {
         return contactDetails;
+    }
+
+
+
+    @Override
+    public UserRole getRole() {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'getRole'");
     }
 }

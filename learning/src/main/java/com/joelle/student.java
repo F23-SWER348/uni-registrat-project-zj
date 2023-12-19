@@ -1,15 +1,15 @@
 package com.joelle;
 
+import java.util.HashMap;
+import java.util.Map;
 
-public class student {
+public class student implements user {
     private long id;
     private String name;
     private String major;
     private double gpa;
     private static long count = 1;
-    
-
-
+    private Map<course, Double> grades = new HashMap<>();
     
     public student(String name, String major, double gpa) {
         this.id = count++;
@@ -35,7 +35,6 @@ public class student {
     public void setGpa(double gpa) {
         this.gpa = gpa;
     }
-
     public double curve(double points){
         return this.gpa+points;
     }
@@ -58,6 +57,16 @@ public class student {
         if(this.id == ((student)obj).getId())
             return true;
         return false;
+    }
+    @Override
+    public String getContactDetails() {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'getContactDetails'");
+    }
+    @Override
+    public UserRole getRole() {
+        return UserRole.STUDENT;
+        // TODO Auto-generated method stub
     }
     
 }
