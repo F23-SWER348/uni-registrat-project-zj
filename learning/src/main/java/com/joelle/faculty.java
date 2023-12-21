@@ -6,11 +6,12 @@ public class faculty implements user{
     private int facultyID;
     private String name;
     private String contactDetails;
-
-    public faculty(int facultyID, String name, String contactDetails) {
+String role;
+    public faculty(int facultyID, String name, String contactDetails,String role) {
         this.facultyID = facultyID;
         this.name = name;
         this.contactDetails = contactDetails;
+        this.role=role;
     }
 
  
@@ -24,14 +25,18 @@ public class faculty implements user{
     }
 
     public String getContactDetails() {
-        return contactDetails;
+        return this.contactDetails;
     }
 
 
 
     @Override
     public UserRole getRole() {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'getRole'");
+        return UserRole.FACULTY;
+    }
+
+
+
+    public void add(faculty faculty) {
     }
 }

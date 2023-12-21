@@ -18,6 +18,9 @@ public class App
         //i am adding randome thing just for testing puspose
 
         //helllooooooooooooooooooo
+<<<<<<< HEAD
+        
+=======
 
 
 
@@ -53,5 +56,6 @@ public class App
         // // Generate academic reports
         // registrar.generateAcademicReport(student1);
         // registrar.generateAcademicReport(student2);
+>>>>>>> 40a24c0f74de16bad995b656618194f65584174a
     }
 }

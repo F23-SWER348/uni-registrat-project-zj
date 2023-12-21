@@ -8,12 +8,12 @@ import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
 
-public class lectureTime {
+public class schedule {
     private List<DayOfWeek> studyDays;
     private LocalTime startTime;
     private LocalTime endTime;
 
-    public lectureTime(List<DayOfWeek> studyDays, LocalTime startTime, LocalTime endTime) {
+    public schedule(List<DayOfWeek> studyDays, LocalTime startTime, LocalTime endTime) {
         this.studyDays = studyDays;
         this.startTime = startTime;
         this.endTime = endTime;

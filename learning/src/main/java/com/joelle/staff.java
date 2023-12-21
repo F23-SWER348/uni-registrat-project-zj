@@ -26,6 +26,30 @@ public class staff {
             this.salary = salary;
         }
     
+        public String getStaffID() {
+            return staffID;
+        }
+
+        public void setStaffID(String staffID) {
+            this.staffID = staffID;
+        }
+
+        public void setName(String name) {
+            this.name = name;
+        }
+
+        public void setPosition(String position) {
+            this.position = position;
+        }
+
+        public void setDepartment(String department) {
+            this.department = department;
+        }
+
+        public void setSalary(double salary) {
+            this.salary = salary;
+        }
+
         // Methods
         public String getStateID() {
             return staffID;
