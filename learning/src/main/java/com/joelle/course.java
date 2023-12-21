@@ -5,12 +5,24 @@ import java.util.List;
 
 public class course {
     private int courseID;
-    private String courseName;
+    private String name;
     private faculty faculty;
     private List<student> studentsEnrolled = new ArrayList<>();
     private int credits;
-    private List<lectureTime> schedule = new ArrayList<>();
-
+    List<schedule> schedule ;
+List<String> prerequisites ;
+List<semester> meetingSemesters;
+    public course(int courseID, String name, faculty faculty, List<student> studentsEnrolled , int credits, List<schedule> schedule) { 
+        this.courseID = courseID;
+        this.name = name;
+        this.faculty = faculty;
+        this.studentsEnrolled = studentsEnrolled;
+        this.credits = credits;
+        this.schedule = schedule;
+    }
+    public course(int courseID2, String name2, int credits2, com.joelle.faculty faculty2,
+            List<com.joelle.schedule> schedule2) {
+    }
     public void addStudent(student student) {
         studentsEnrolled.add(student);
     }
@@ -28,20 +40,11 @@ public class course {
     }
 
     public String getCourseName() {
-        return courseName;
+        return name;
     }
 
-    public course(int courseID, String courseName, com.joelle.faculty faculty, List<student> studentsEnrolled,
-      int credits, List<lectureTime> schedule) {
-      this.courseID = courseID;
-      this.courseName = courseName;
-      this.faculty = faculty;
-      this.studentsEnrolled = studentsEnrolled;
-      this.credits = credits;
-      this.schedule = schedule;
-   }
-   private List<String> prerequisites;
-
+  
+   
    // Constructor and other methods...
 
    public List<String> getPrerequisites() {
@@ -55,11 +58,11 @@ public class course {
         return credits;
     }
 
-    public List<lectureTime> getSchedule() {
-        return schedule;
-    }
+    // public List<schedule> getSchedule() {
+    //     return schedule();
+    // }
 
-    public void addLectureTime(lectureTime lectureTime) {
-        schedule.add(lectureTime);
-    }
+    // public void addLectureTime(schedule lectureTime) {
+    //     schedule.add(lectureTime);
+    // }
 }
