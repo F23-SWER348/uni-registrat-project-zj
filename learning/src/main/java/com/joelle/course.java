@@ -4,12 +4,14 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class course {
+  
     private int courseID;
     private String courseName;
     private faculty faculty;
     private List<student> studentsEnrolled = new ArrayList<>();
     private int credits;
     private List<lectureTime> schedule = new ArrayList<>();
+   
 
     public void addStudent(student student) {
         studentsEnrolled.add(student);

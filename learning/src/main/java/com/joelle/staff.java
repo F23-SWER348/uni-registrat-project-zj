@@ -1,5 +1,11 @@
 package com.joelle;
 
+import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
+
+import com.joelle.user.UserRole;
+
 public class staff {
     public class Staff implements user{
         // Data Fields
@@ -8,6 +14,8 @@ public class staff {
         private String position;
         private String department;
         private double salary;
+        private String email;
+        private String phoneNumber;
     
         // Constructor
         public Staff(String staffID, String name, String position, String department, double salary) {
@@ -39,14 +47,18 @@ public class staff {
             return salary;
         }
     
-        public double calculateBonus() {
-            // Add bonus calculation logic here
-            return 0.0; // Placeholder, replace with actual calculation
-        }
+        
     
         public void updateSalary(double newSalary) {
-            // Add logic to update salary
-            this.salary = newSalary;
+            Optional.of(newSalary)
+                    .filter(s -> s >= 0) // Ensure the new salary value is positive or zero
+                    .ifPresentOrElse(
+                            s -> {
+                                this.salary = s;
+                                System.out.println("Salary updated successfully to: " + s);
+                            },
+                            () -> System.out.println("Error: Salary must be a positive value.")
+                    );
         }
     
         public void assignToProject(String projectName) {
@@ -56,14 +68,24 @@ public class staff {
 
         @Override
         public String getContactDetails() {
-            // TODO Auto-generated method stub
-            throw new UnsupportedOperationException("Unimplemented method 'getContactDetails'");
-        }
-
-        @Override
-        public UserRole getRole() {
-            // TODO Auto-generated method stub
-            throw new UnsupportedOperationException("Unimplemented method 'getRole'");
+        if (email != null && phoneNumber != null) {
+            return "Email: " + email + ", Phone: " + phoneNumber;
+        } else {
+            return "Contact details are incomplete";
         }
     }
+
+    // Other methods or fields related to Staff class...
+
+    // Example method using Stream to get contact details for a list of Staff
+    public static List<String> getContactDetailsList(List<Staff> staffList) {
+        return staffList.stream()
+                .map(Staff::getContactDetails)
+                .collect(Collectors.toList());
+    }
 }
+
+       
+        
+    }
+
