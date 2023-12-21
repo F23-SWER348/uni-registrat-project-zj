@@ -1,29 +1,40 @@
 package com.joelle;
 
 import java.time.DayOfWeek;
+
+
+
 import java.time.LocalTime;
+import java.util.ArrayList;
+import java.util.List;
 
 public class lectureTime {
-   private DayOfWeek dayOfWeek;
-private LocalTime startTime;
-private LocalTime endTime;
+    private List<DayOfWeek> studyDays;
+    private LocalTime startTime;
+    private LocalTime endTime;
 
-public lectureTime(DayOfWeek dayOfWeek, LocalTime startTime, LocalTime endTime) {
-this.dayOfWeek = dayOfWeek;
-this.startTime = startTime;
-this.endTime = endTime;
-}
+    public lectureTime(List<DayOfWeek> studyDays, LocalTime startTime, LocalTime endTime) {
+        this.studyDays = studyDays;
+        this.startTime = startTime;
+        this.endTime = endTime;
+    }
 
-public DayOfWeek getDayOfWeek() {
-return dayOfWeek;
-}
+    public List<DayOfWeek> getStudyDays() {
+        return studyDays;
+    }
 
-public LocalTime getStartTime() {
-return startTime;
-}
+    public LocalTime getStartTime() {
+        return startTime;
+    }
 
-public LocalTime getEndTime() {
-return endTime;
-}
-} 
+    public LocalTime getEndTime() {
+        return endTime;
+    }
 
+    public String checkStudyDay(DayOfWeek day) {
+        if (studyDays.contains(day)) {
+            return "There are lectures on this day.";
+        } else {
+            return "There are no lectures on this day.";
+        }
+      }}
