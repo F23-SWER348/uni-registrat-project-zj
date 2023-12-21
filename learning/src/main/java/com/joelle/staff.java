@@ -32,6 +32,7 @@ public class staff {
 
         public void setPosition(String position) {
             this.position = position;
+           // gg
         }
 
         public void setDepartment(String department) {
