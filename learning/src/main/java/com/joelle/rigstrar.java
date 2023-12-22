@@ -1,6 +1,7 @@
 package com.joelle;
 
 
+import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -13,7 +14,7 @@ public class rigstrar  {
     List<student> students;
     List<faculty> faculty;
     List<semester> semester;
-    List<course> courses;
+    List<course> courses; 
    
 
 public void registerStudentForCourse(student student, course course) {
@@ -57,9 +58,38 @@ public void createCourse(int courseID, String name, int credits, faculty faculty
 courses.add(course);
 }
 
-public void browseCourses() {
-// Add logic to browse available courses
-}
+
+    public void browseCourses() {
+        
+       courses.forEach(course -> {
+            System.out.println("Course ID: " + course.getCourseID());
+            System.out.println("Name: " + course.getCourseName());
+            System.out.println("Faculty: " + course.getFaculty().getName());
+            System.out.println("Credits: " + course.getCredits());
+
+            System.out.println("Schedule:");
+            course.getSchedule().forEach(schedule -> {
+                System.out.println("- Day: " + schedule.getStudyDays());
+                System.out.println("  Time: " + schedule.getStartTime() + " - " + schedule.getEndTime());
+                System.out.println("  Lecture Status: " + schedule.checkStudyDay(DayOfWeek.MONDAY)); // Example check for a specific day
+            });
+
+            // Print prerequisites using Stream
+            System.out.println("Prerequisites:");
+            course.getPrerequisites().forEach(p -> System.out.println("- " + p));
+
+            // Print meeting semesters using Stream
+            System.out.println("Meeting Semesters:");
+course.getMeetingSemesters().forEach(semester -> System.out.println("- " + semester.getName()));
+            // Print students enrolled using Stream
+            System.out.println("Students Enrolled:");
+            course.listEnrolledStudents().forEach(student -> System.out.println("- " + student.getContactDetails()));
+
+            System.out.println("-----------------------------------");
+        });
+    }
+
+
 
 
 

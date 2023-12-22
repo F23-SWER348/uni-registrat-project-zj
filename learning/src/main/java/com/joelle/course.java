@@ -12,6 +12,10 @@ public class course {
     List<schedule> schedule ;
 List<String> prerequisites ;
 List<semester> meetingSemesters;
+
+    public List<semester> getMeetingSemesters() {
+    return meetingSemesters;
+}
     public course(int courseID, String name, faculty faculty, List<student> studentsEnrolled , int credits, List<schedule> schedule) { 
         this.courseID = courseID;
         this.name = name;
@@ -57,12 +61,9 @@ List<semester> meetingSemesters;
     public int getCredits() {
         return credits;
     }
+    public List<schedule> getSchedule() {
+        return schedule;
+    }
 
-    // public List<schedule> getSchedule() {
-    //     return schedule();
-    // }
-
-    // public void addLectureTime(schedule lectureTime) {
-    //     schedule.add(lectureTime);
-    // }
-}
+   
+    }
