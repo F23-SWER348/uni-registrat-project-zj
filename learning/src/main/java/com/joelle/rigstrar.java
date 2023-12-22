@@ -103,38 +103,28 @@ public void browseCourses() {
 
 
 
-    public boolean haveConflict(List<section> sections) {
-        return sections.stream()
-                .flatMap(section -> sections.stream().filter(s -> !s.equals(section))
-                        .flatMap(otherSection -> section.getSectionSchedule().stream()
-                                .flatMap(schedule1 -> otherSection.getSectionSchedule().stream()
-                                        .filter(schedule2 -> ConflictBetweenSchedules(schedule1, schedule2)))))
-                .findAny()
-                .isPresent();
-    }
-
-    private boolean ConflictBetweenSchedules(schedule schedule1, schedule schedule2) {
+    public boolean haveConflictBetweenSchedules(schedule schedule1, schedule schedule2) {
         List<DayOfWeek> days1 = schedule1.getStudyDays();
         List<DayOfWeek> days2 = schedule2.getStudyDays();
-
+    
         boolean commonDays = !Collections.disjoint(days1, days2);
-
+    
         LocalTime startTime1 = schedule1.getStartTime();
         LocalTime endTime1 = schedule1.getEndTime();
         LocalTime startTime2 = schedule2.getStartTime();
         LocalTime endTime2 = schedule2.getEndTime();
-
+    
         boolean timeOverlap = startTime1.isBefore(endTime2) && endTime1.isAfter(startTime2);
-
+    
         return commonDays && timeOverlap;
     }
-
-    private boolean haveConflictBetweenSections(List<section> sections) {
+    
+    public boolean haveConflictBetweenSections(List<section> sections) {
         return sections.stream()
                 .flatMap(section -> sections.stream().filter(s -> !s.equals(section))
                         .flatMap(otherSection -> section.getSectionSchedule().stream()
                                 .flatMap(schedule1 -> otherSection.getSectionSchedule().stream()
-                                        .filter(schedule2 -> ConflictBetweenSchedules(schedule1, schedule2)))))
+                                        .filter(schedule2 -> haveConflictBetweenSchedules(schedule1, schedule2)))))
                 .findAny()
                 .isPresent();
     }
