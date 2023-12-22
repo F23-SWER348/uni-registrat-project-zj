@@ -49,8 +49,8 @@ public void createFaculty(int facultyID,String name, String contactDetails,Strin
 faculty.add(faculty);
 }
 
-public void createSemester(int semesterID,String name, LocalDate startDate, LocalDate endDate) {
-semester Semester = new semester(semesterID,name, startDate, endDate); 
+public void createSemester(int semesterID,String name, LocalDate startDate, LocalDate endDate,String contactsemesterDetails) {
+semester Semester = new semester(semesterID,name, startDate, endDate,contactsemesterDetails); 
 semester.add(Semester);
 
 }
@@ -189,5 +189,5 @@ private String determineAcademicStanding(double overallGPA) {
 
 
 
-}}
+}
 
