@@ -6,12 +6,20 @@ public class semester {
    private int semesterID;
     private LocalDate startDate;
     private LocalDate endDate;
+    String contactsemesterDetails;
+
+
+   
+public String getContactsemesterDetails() {
+        return contactsemesterDetails;
+    }
 String name;
-    public semester(int semesterID, String name,LocalDate startDate, LocalDate endDate) {
+    public semester(int semesterID, String name,LocalDate startDate, LocalDate endDate,String contactsemesterDetails) {
         this.semesterID = semesterID;
         this.startDate = startDate;
         this.endDate = endDate;
         this.name=name;
+        this.contactsemesterDetails=contactsemesterDetails;
     }
 
     public void setSemesterID(int semesterID) {
@@ -44,6 +52,10 @@ String name;
 
     public LocalDate getEndDate() {
         return endDate;
+    }
+    public String contactsemesterDetails() {
+       
+        throw new UnsupportedOperationException("Unimplemented method 'getContactDetails'");
     }
 }  
 
