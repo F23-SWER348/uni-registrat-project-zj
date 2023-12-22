@@ -12,7 +12,14 @@ public class course {
     List<schedule> schedule ;
 List<String> prerequisites ;
 List<semester> meetingSemesters;
+private List<section> sections;
 
+
+
+
+    public List<section> getSections() {
+    return sections;
+}
     public List<semester> getMeetingSemesters() {
     return meetingSemesters;
 }
@@ -24,9 +31,13 @@ List<semester> meetingSemesters;
         this.credits = credits;
         this.schedule = schedule;
     }
+    public course() {
+        sections = new ArrayList<>();
+    }
     public course(int courseID2, String name2, int credits2, com.joelle.faculty faculty2,
             List<com.joelle.schedule> schedule2) {
     }
+
     public void addStudent(student student) {
         studentsEnrolled.add(student);
     }
@@ -45,6 +56,21 @@ List<semester> meetingSemesters;
 
     public String getCourseName() {
         return name;
+    }
+    public void addSection(section section) {
+        sections.add(section);
+    }
+    public section getOrCreateSection() {
+        // Check if a section already exists for the course
+        if (sections.isEmpty()) {
+            // If no section exists, create a new one and add it to the list of sections
+            section newSection = new section();
+            sections.add(newSection);
+            return newSection;
+        } else {
+            // If a section exists, return the first one (you might need to refine this logic)
+            return sections.get(0);
+        }
     }
 
   

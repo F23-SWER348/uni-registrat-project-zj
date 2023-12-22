@@ -1,8 +1,22 @@
 package com.joelle;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class section extends course{
+   
+   
+    private int sectionId;
+    // other fields and methods...
+
+    
+    // Getters and setters
+
+     public section() {
+        enrolledStudents = new ArrayList<>();
+    }
+
+    private List<student> enrolledStudents;
 
     private List<schedule> sectionSchedule;
 
@@ -14,10 +28,17 @@ public class section extends course{
     public List<schedule> getSectionSchedule() {
         return sectionSchedule;
     }
+public int getSectionId() {
+        return sectionId;
+    }
 
     public void setSectionSchedule(List<schedule> sectionSchedule) {
         this.sectionSchedule = sectionSchedule;
     }
+    public void addStudent(List<student> students) {
+        enrolledStudents.addAll(students);
+    }
+    
 
     
 }

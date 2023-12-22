@@ -3,7 +3,9 @@ package com.joelle;
 
 import java.time.DayOfWeek;
 import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -59,34 +61,36 @@ courses.add(course);
 }
 
 
-    public void browseCourses() {
-        
-       courses.forEach(course -> {
-            System.out.println("Course ID: " + course.getCourseID());
-            System.out.println("Name: " + course.getCourseName());
-            System.out.println("Faculty: " + course.getFaculty().getName());
-            System.out.println("Credits: " + course.getCredits());
+public void browseCourses() {
+    courses.forEach(course -> {
+        System.out.println("Course ID: " + course.getCourseID());
+        System.out.println("Name: " + course.getCourseName());
+        System.out.println("Faculty: " + course.getFaculty().getName());
+        System.out.println("Credits: " + course.getCredits());
 
-            System.out.println("Schedule:");
-            course.getSchedule().forEach(schedule -> {
+        List<section> sections = course.getSections();
+
+        sections.forEach(section -> {
+            System.out.println("Section ID: " + section.getSectionId());
+            System.out.println("Section Schedule:");
+            section.getSectionSchedule().forEach(schedule -> {
                 System.out.println("- Day: " + schedule.getStudyDays());
                 System.out.println("  Time: " + schedule.getStartTime() + " - " + schedule.getEndTime());
-                System.out.println("  Lecture Status: " + schedule.checkStudyDay(DayOfWeek.MONDAY)); // Example check for a specific day
+                System.out.println("  Lecture Status: " + schedule.checkStudyDay(DayOfWeek.MONDAY));
             });
 
-            // Print prerequisites using Stream
-            System.out.println("Prerequisites:");
-            course.getPrerequisites().forEach(p -> System.out.println("- " + p));
-
-            // Print meeting semesters using Stream
-            System.out.println("Meeting Semesters:");
-course.getMeetingSemesters().forEach(semester -> System.out.println("- " + semester.getName()));
-            // Print students enrolled using Stream
             System.out.println("Students Enrolled:");
-            course.listEnrolledStudents().forEach(student -> System.out.println("- " + student.getContactDetails()));
-
-            System.out.println("-----------------------------------");
+            section. listEnrolledStudents().forEach(student -> System.out.println("- " + student.getContactDetails()));
         });
+
+        System.out.println("Prerequisites:");
+        course.getPrerequisites().forEach(p -> System.out.println("- " + p));
+
+        System.out.println("Meeting Semesters:");
+        course.getMeetingSemesters().forEach(semester -> System.out.println("- " + semester.getName()));
+
+        System.out.println("-----------------------------------");
+    });
     }
 
 
@@ -95,33 +99,71 @@ course.getMeetingSemesters().forEach(semester -> System.out.println("- " + semes
 
 
 
-// Additional methods related to Registrar's activities
-// For example: validatePrerequisites(), notifyScheduleConflict(), etc.
 
 
 
-// private boolean checkScheduleConflicts(student student, course course) {
-//     List<course> registeredCourses = registeredStudents.getOrDefault(student, List.of());
-//     if (courseHasScheduleConflict(course, registeredCourses)) {
-//         System.out.println("Schedule conflict for student " + student.getName() + " with course " + course.getCourseName());
-//         return false;
-//     }
-//     return true;
-// }
 
-private boolean courseHasScheduleConflict(course course, List<course> registeredCourses) {
-    
-    return false; 
-}
-
-public void viewPrerequisites(course course) {
-   
+    public boolean haveConflict(List<section> sections) {
+        return sections.stream()
+                .flatMap(section -> sections.stream().filter(s -> !s.equals(section))
+                        .flatMap(otherSection -> section.getSectionSchedule().stream()
+                                .flatMap(schedule1 -> otherSection.getSectionSchedule().stream()
+                                        .filter(schedule2 -> ConflictBetweenSchedules(schedule1, schedule2)))))
+                .findAny()
+                .isPresent();
     }
 
-    // Method to register students for a course
+    private boolean ConflictBetweenSchedules(schedule schedule1, schedule schedule2) {
+        List<DayOfWeek> days1 = schedule1.getStudyDays();
+        List<DayOfWeek> days2 = schedule2.getStudyDays();
+
+        boolean commonDays = !Collections.disjoint(days1, days2);
+
+        LocalTime startTime1 = schedule1.getStartTime();
+        LocalTime endTime1 = schedule1.getEndTime();
+        LocalTime startTime2 = schedule2.getStartTime();
+        LocalTime endTime2 = schedule2.getEndTime();
+
+        boolean timeOverlap = startTime1.isBefore(endTime2) && endTime1.isAfter(startTime2);
+
+        return commonDays && timeOverlap;
+    }
+
+    private boolean haveConflictBetweenSections(List<section> sections) {
+        return sections.stream()
+                .flatMap(section -> sections.stream().filter(s -> !s.equals(section))
+                        .flatMap(otherSection -> section.getSectionSchedule().stream()
+                                .flatMap(schedule1 -> otherSection.getSectionSchedule().stream()
+                                        .filter(schedule2 -> ConflictBetweenSchedules(schedule1, schedule2)))))
+                .findAny()
+                .isPresent();
+    }
+
+    public void viewPrerequisites(course course) {
+        List<String> prerequisites = course.getPrerequisites();
+
+        System.out.println("Prerequisites for " + course.getCourseName() + ":");
+        prerequisites.forEach(prerequisite -> System.out.println("- " + prerequisite));
+    }
+
     public void registerStudentsForClass(List<student> students, course course) {
-    
+        List<section> sections = course.getSections();
+
+        boolean hasConflict = haveConflictBetweenSections(sections);
+
+        if (!hasConflict) {
+            section section = course.getOrCreateSection(); // Get or create a section for the course
+            section.addStudent(students); // Register students in the section
+            course.addSection(section); // Optionally, update or add the section to the course
+
+            System.out.println(students.size() + " students registered for " + course.getCourseName());
+        } else {
+            System.out.println("There is a schedule conflict. Cannot register students for this course.");
+        }
     }
+
+        // Add students to the section or class
+      
  // Method to enter grades for a student in a course
  public void enterGrades(student student, course course, double grade) {
  
@@ -147,5 +189,5 @@ private String determineAcademicStanding(double overallGPA) {
 
 
 
-}
+}}
 
