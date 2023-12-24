@@ -8,6 +8,9 @@ import java.util.stream.Collectors;
 public class student implements user {
     private int id;
     private String name;
+   
+
+   
     private String major;
     private double gpa;
 String contactDetails;
@@ -17,27 +20,34 @@ String contactDetails;
     private static long count = 1;
     private Map<course, Double> grades = new HashMap<>();
         private Map<course, Double> gradess = new HashMap<>();
-
-        public student(int id, String name, String contactDetails, String major) {
+private faculty faculty;
+        public student(int id, String name, String contactDetails, String major,faculty faculty) {
             this.id = id;
             this.name = name;
             this.contactDetails = contactDetails;
             this.major = major;
+            this.faculty = faculty;
+
         }
-    
+         public void setFaculty(faculty faculty) {
+        this.faculty = faculty;
+    }
+     public faculty getFaculty() {
+        return faculty;
+    }
     public void setId(int id) {
         this.id = id;
     }
 
-    public void setContactDetails(String contactDetails) {
+    public synchronized void setContactDetails(String contactDetails) {
         this.contactDetails = contactDetails;
     }
 
-    public void setRole(String role) {
+    public synchronized void  setRole(String role) {
         this.role = role;
     }
 
-    public static void setCount(long count) {
+    public static synchronized void setCount(long count) {
         student.count = count;
     }
 

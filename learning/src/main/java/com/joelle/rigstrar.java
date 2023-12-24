@@ -11,13 +11,18 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.ForkJoinPool;
 import java.util.concurrent.RecursiveTask;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
 
 public class rigstrar {
 
-    private List<student> students;
-    private List<faculty> facultys;
-    private List<semester> semesters;
-    private List<course> courses;
+    private ArrayList<student> students;
+    private ArrayList<faculty> facultys;
+    private ArrayList<semester> semesters;
+    private ArrayList<course> courses;
+        private ArrayList<staff> staffs;
+    private final Lock lock = new ReentrantLock();
+
 
     public rigstrar() {
         // Initialize the lists in the constructor
@@ -35,13 +40,21 @@ public class rigstrar {
 
     // method that fills the map
 
-    public void createstaff(String staffID, String name, String position, String department, double salary) {
-
+    public staff createstaff(String staffID, String name,String phoneNumber ,String email ) {
+    staff staff = new staff(staffID, name,phoneNumber, email);
+        if (this.staffs != null) {
+            this.staffs.add(staff);
+        } else {
+            // Handle the case where students is null (this should not happen if properly
+            // initialized)
+            System.out.println("Error: students list is not initialized.");
+        }
+        return staff;
     }
 
-    public student createStudent(int ID, String name, String contactDetails, String major) {
+    public student createStudent(int ID, String name, String contactDetails, String major,faculty faculty) {
 
-        student student = new student(ID, name, contactDetails, major);
+        student student = new student(ID, name, contactDetails, major,faculty);
         if (this.students != null) {
             this.students.add(student);
         } else {
@@ -80,15 +93,22 @@ public class rigstrar {
     }
 
     public course createCourse(int courseID, String name, int credits, faculty faculty, List<schedule> schedule) {
-        course course = new course(courseID, name, credits, faculty, schedule);
-      if (this.courses != null) {
-            this.courses.add(course);
-        } else {
-            // Handle the case where students is null (this should not happen if properly
-            // initialized)
-            System.out.println("Error: courses list is not initialized.");
+        lock.lock();
+        try {
+            course course = new course(courseID, name, credits, faculty, schedule);
+            
+            if (this.courses != null) {
+                this.courses.add(course);
+            } else {
+                // Handle the case where courses list is not initialized (this should not happen if properly initialized)
+                System.out.println("Error: courses list is not initialized.");
+            }
+            
+            return course;
+        } finally {
+            lock.unlock();
         }
-        return course;    }
+    }
 
     public void browseCourses() {
         if (this.courses != null) {
@@ -168,6 +188,9 @@ public class rigstrar {
                 .isPresent();
     }
 
+      public void ceckPrerequisites(course course) {
+
+      }
     public void viewPrerequisites(course course) {
         List<String> prerequisites = course.getPrerequisites();
 

@@ -10,12 +10,9 @@ public class course {
     private List<student> studentsEnrolled = new ArrayList<>();
     private int credits;
     List<schedule> schedule ;
-List<String> prerequisites ;
+List<course> prerequisites ;
 List<semester> meetingSemesters;
 private List<section> sections;
-
-
-
 
     public List<section> getSections() {
     return sections;

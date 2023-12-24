@@ -11,15 +11,17 @@ import com.joelle.user.UserRole;
         // Data Fields
         private String staffID;
         private String name;
-        private String department;
         private String email;
         private String phoneNumber;
     
         // Constructor
-        public staff(String staffID, String name, String department) {
+        public staff(String staffID, String name,String phoneNumber,String email) {
             this.staffID = staffID;
             this.name = name;
-            this.department = department;
+            this.phoneNumber = phoneNumber;
+            this.email = email;
+
+
         }
     
         public String getStaffID() {
@@ -40,7 +42,7 @@ import com.joelle.user.UserRole;
         }
 
         public void setEmail(String email) {
-            this.email = "satff@vkadfbgikdb";
+            this.email=email;;
         }
 
         public String getPhoneNumber() {
@@ -48,30 +50,19 @@ import com.joelle.user.UserRole;
         }
 
         public void setPhoneNumber(String phoneNumber) {
-            this.phoneNumber = "3578890087";
+            this.phoneNumber=phoneNumber;
         }
 
-        public void setDepartment(String department) {
-            this.department = department;
-        }
-
+     
        
 
-        // Methods
-        public String getStateID() {
-            return staffID;
-        }
-    
+      
         public String getName() {
             return name;
         }
     
     
-        public String getDepartment() {
-            return department;
-        }
     
-      
         
  
     
