@@ -6,24 +6,20 @@ import java.util.stream.Collectors;
 
 import com.joelle.user.UserRole;
 
-public class staff {
-    public class Staff implements user{
+
+    public class staff implements user{
         // Data Fields
         private String staffID;
         private String name;
-        private String position;
         private String department;
-        private double salary;
         private String email;
         private String phoneNumber;
     
         // Constructor
-        public Staff(String staffID, String name, String position, String department, double salary) {
+        public staff(String staffID, String name, String department) {
             this.staffID = staffID;
             this.name = name;
-            this.position = position;
             this.department = department;
-            this.salary = salary;
         }
     
         public String getStaffID() {
@@ -38,18 +34,28 @@ public class staff {
             this.name = name;
         }
 
-        public void setPosition(String position) {
-            this.position = position;
-           // gg
+
+        public String getEmail() {
+            return email;
+        }
+
+        public void setEmail(String email) {
+            this.email = "satff@vkadfbgikdb";
+        }
+
+        public String getPhoneNumber() {
+            return phoneNumber;
+        }
+
+        public void setPhoneNumber(String phoneNumber) {
+            this.phoneNumber = "3578890087";
         }
 
         public void setDepartment(String department) {
             this.department = department;
         }
 
-        public void setSalary(double salary) {
-            this.salary = salary;
-        }
+       
 
         // Methods
         public String getStateID() {
@@ -60,36 +66,16 @@ public class staff {
             return name;
         }
     
-        public String getPosition() {
-            return position;
-        }
     
         public String getDepartment() {
             return department;
         }
     
-        public double getSalary() {
-            return salary;
-        }
+      
+        
+ 
     
         
-    
-        public void updateSalary(double newSalary) {
-            Optional.of(newSalary)
-                    .filter(s -> s >= 0) // Ensure the new salary value is positive or zero
-                    .ifPresentOrElse(
-                            s -> {
-                                this.salary = s;
-                                System.out.println("Salary updated successfully to: " + s);
-                            },
-                            () -> System.out.println("Error: Salary must be a positive value.")
-                    );
-        }
-    
-        public void assignToProject(String projectName) {
-            // Add logic to assign the staff to a project
-            System.out.println(name + " has been assigned to the project: " + projectName);
-        }
 
         @Override
         public String getContactDetails() {
@@ -100,17 +86,21 @@ public class staff {
         }
     }
 
-    // Other methods or fields related to Staff class...
+    
 
-    // Example method using Stream to get contact details for a list of Staff
-    public static List<String> getContactDetailsList(List<Staff> staffList) {
+    public static List<String> getContactDetailsList(List<staff> staffList) {
         return staffList.stream()
-                .map(Staff::getContactDetails)
+                .map(staff::getContactDetails)
                 .collect(Collectors.toList());
+    }
+
+    @Override
+    public UserRole getRole() {
+return UserRole.STAFF;
     }
 }
 
        
         
-    }
+    
 

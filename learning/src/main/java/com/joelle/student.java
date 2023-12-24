@@ -1,7 +1,9 @@
 package com.joelle;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 public class student implements user {
     private int id;
@@ -10,15 +12,16 @@ public class student implements user {
     private double gpa;
 String contactDetails;
  String role;
+ private String email;
+ private String phoneNumber;
     private static long count = 1;
     private Map<course, Double> grades = new HashMap<>();
         private Map<course, Double> gradess = new HashMap<>();
 
-        public student(int id, String name, String contactDetails, String role, String major) {
+        public student(int id, String name, String contactDetails, String major) {
             this.id = id;
             this.name = name;
             this.contactDetails = contactDetails;
-            this.role = role;
             this.major = major;
         }
     
@@ -48,6 +51,22 @@ String contactDetails;
 
     public Map<course, Double> getGradess() {
         return gradess;
+    }
+
+    public String getEmail() {
+        return "stu123@betleem.edu";
+    }
+
+    public void setEmail(String email) {
+        this.email = "stu123@betleem.edu";
+    }
+
+    public String getPhoneNumber() {
+        return "05987545";
+    }
+
+    public void setPhoneNumber(String phoneNumber) {
+        this.phoneNumber = "05987545";
     }
 
     public void setGradess(Map<course, Double> gradess) {
@@ -96,13 +115,21 @@ String contactDetails;
     }
     @Override
     public String getContactDetails() {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'getContactDetails'");
+    if (email != null && phoneNumber != null) {
+        return "Email: " + email + ", Phone: " + phoneNumber;
+    } else {
+        return "Contact details are incomplete";
+    }
+}
+
+ public static List<String> getContactDetailsList(List<student> staffList) {
+        return staffList.stream()
+                .map(student::getContactDetails)
+                .collect(Collectors.toList());
     }
     @Override
     public UserRole getRole() {
         return UserRole.STUDENT;
-        // TODO Auto-generated method stub
     }
     
 }
