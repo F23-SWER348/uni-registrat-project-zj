@@ -9,6 +9,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
+import java.util.stream.Collectors;
 
 public class rigstrar {
 
@@ -106,98 +107,121 @@ public class rigstrar {
         }
     }
 
-    public void browseCourses() {
-        if (this.courses != null) {
-
-            courses.forEach(course -> {
-                System.out.println("Course ID: " + course.getCourseID());
-                System.out.println("Name: " + course.getCourseName());
-                System.out.println("Faculty: " + course.getFaculty().getName());
-                System.out.println("Credits: " + course.getCredits());
-
-                List<section> sections = course.getSections();
-
-                sections.forEach(section -> {
-                    System.out.println("Section ID: " + section.getSectionId());
-                    System.out.println("Section Schedule:");
-                    section.getSectionSchedule().forEach(schedule -> {
-                        System.out.println("- Day: " + schedule.getStudyDays());
-                        System.out.println("  Time: " + schedule.getStartTime() + " - " + schedule.getEndTime());
-                        System.out.println("  Lecture Status: " + schedule.checkStudyDay(DayOfWeek.MONDAY));
-                    });
-
-                    System.out.println("Students Enrolled:");
-                    section.listEnrolledStudents()
-                            .forEach(student -> System.out.println("- " + student.getContactDetails()));
-                });
-
-                System.out.println("Prerequisites:");
-                course.getPrerequisites().forEach(p -> System.out.println("- " + p));
-
-                System.out.println("Meeting Semesters:");
-                course.getMeetingSemesters().forEach(semester -> System.out.println("- " + semester.getName()));
-
-                System.out.println("-----------------------------------");
-            });
-
-        } else {
-            // Handle the case where courses is null (this should not happen if properly
-            // initialized)
-            System.out.println("Error: courses list is not initialized.");
-        }
-
+    public void browseCourses(List<course> courses) {
+        System.out.println("Available Courses:");
+        courses.stream()
+                .map(c -> "Course ID: " + c.getCourseID() +
+                        "\nCourse Name: " + c.getCourseName() +
+                        "\nFaculty: " + c.getFaculty().getName() +
+                        "\nCredits: " + c.getCredits() +
+                        "\n------------------------")
+                .forEach(System.out::println);
     }
+        
+    
 
-    public boolean haveConflictBetweenSchedules(schedule schedule1, schedule schedule2) {
+       
+
+    private boolean hasConflict(List<student> students) {
+        if (students == null || students.isEmpty()) {
+            return false; // No students, hence no conflicts
+        }
+    
+        List<schedule> allSchedules = students.stream()
+                .flatMap(student -> {
+                    List<schedule> studentSchedules = student.getSchedule();
+                    return studentSchedules != null ? studentSchedules.stream() : null;
+                })
+                .filter(schedule -> schedule != null)
+                .collect(Collectors.toList());
+    
+        return allSchedules.stream()
+                .anyMatch(schedule1 -> allSchedules.stream()
+                        .filter(schedule2 -> !schedule1.equals(schedule2))
+                        .filter(schedule2 -> haveCommonDay(schedule1, schedule2))
+                        .anyMatch(schedule2 -> doSchedulesOverlap(schedule1, schedule2)));
+    }
+    
+    
+    // Helper method to check if schedules occur on the same day
+    private boolean haveCommonDay(schedule schedule1, schedule schedule2) {
         List<DayOfWeek> days1 = schedule1.getStudyDays();
         List<DayOfWeek> days2 = schedule2.getStudyDays();
     
-        boolean commonDays = !Collections.disjoint(days1, days2);
-    
-        LocalTime startTime1 = schedule1.getStartTime();
-        LocalTime endTime1 = schedule1.getEndTime();
-        LocalTime startTime2 = schedule2.getStartTime();
-        LocalTime endTime2 = schedule2.getEndTime();
-    
-        boolean timeOverlap = startTime1.isBefore(endTime2) && endTime1.isAfter(startTime2);
-    
-        return commonDays && timeOverlap;
+        return days1.stream().anyMatch(days2::contains);
     }
     
-    public boolean haveConflictBetweenSections(List<section> sections) {
-        return sections.stream()
-                .flatMap(section -> sections.stream().filter(s -> !s.equals(section))
-                        .flatMap(otherSection -> section.getSectionSchedule().stream()
-                                .flatMap(schedule1 -> otherSection.getSectionSchedule().stream()
-                                        .filter(schedule2 -> haveConflictBetweenSchedules(schedule1, schedule2)))))
-                .findAny()
-                .isPresent();
-    }
+    // Helper method to check if schedules have overlapping time slots
+private boolean doSchedulesOverlap(schedule schedule1, schedule schedule2) {
+    LocalTime start1 = schedule1.getStartTime();
+    LocalTime end1 = schedule1.getEndTime();
+    LocalTime start2 = schedule2.getStartTime();
+    LocalTime end2 = schedule2.getEndTime();
 
-      public void ceckPrerequisites(course course) {
+    return !(start1.isAfter(end2) || start2.isAfter(end1));
+}
+       
+    
 
+    
+        public void checkPrerequisites(course course, student student) {
+            List<course> completedCourses = student.getCompletedCourses();
+            Optional.ofNullable(course)
+                    .map(courseObj -> courseObj.getPrerequisites())
+                    .ifPresentOrElse(
+                            prerequisites -> {
+                                boolean allPrerequisitesTaken = prerequisites.stream().allMatch(completedCourses::contains);
+                                if (allPrerequisitesTaken) {
+                                    System.out.println("Student has taken all prerequisites for " + course.getCourseName());
+                                } else {
+                                    System.out.println("Student needs to take prerequisites first for " + course.getCourseName());
+                                }
+                            },
+                            () -> System.out.println("No prerequisites information available for " + course.getCourseName())
+                    );
+        
       }
-    public void viewPrerequisites(course course) {
-        List<String> prerequisites = course.getPrerequisites();
-
-        System.out.println("Prerequisites for " + course.getCourseName() + ":");
-        prerequisites.forEach(prerequisite -> System.out.println("- " + prerequisite));
+      public void viewPrerequisites(course course) {
+        Optional.ofNullable(course)
+                .map(courseObj -> courseObj.getPrerequisites())
+                .ifPresentOrElse(
+                        prerequisites -> {
+                            if (!prerequisites.isEmpty()) {
+                                System.out.println("Prerequisites for " + course.getCourseName() + ":");
+                                prerequisites.forEach(prereq -> System.out.println(prereq.getCourseName()));
+                            } else {
+                                System.out.println("No prerequisites for " + course.getCourseName());
+                            }
+                        },
+                        () -> System.out.println("No prerequisites information available for " + course.getCourseName())
+                );
     }
-
-    public void registerStudentsForClass(List<student> students, course course) {
-        List<section> sections = course.getSections();
-
-        boolean hasConflict = haveConflictBetweenSections(sections);
-
-        if (!hasConflict) {
-            section section = course.getOrCreateSection(); // Get or create a section for the course
-            section.addStudent(students); // Register students in the section
-            course.addSection(section); // Optionally, update or add the section to the course
-
-            System.out.println(students.size() + " students registered for " + course.getCourseName());
-        } else {
-            System.out.println("There is a schedule conflict. Cannot register students for this course.");
+      
+    public void registerStudentsForCourse(List<student> students, course course) {
+        if (students == null || students.isEmpty() || course == null) {
+            System.out.println("Invalid input: No students or course provided.");
+            return;
         }
+    
+        if (course.getStudentsEnrolled() == null || course.getPrerequisites() == null) {
+            System.out.println("Course properties are not properly initialized.");
+            return;
+        }
+    
+        boolean conflictExists = hasConflict(students);
+    
+        if (conflictExists) {
+            System.out.println("There is a schedule conflict. Registration for " + course.getCourseName() + " is not allowed.");
+            return;
+        }
+    
+        students.stream()
+                .filter(student -> !course.getStudentsEnrolled().contains(student))
+                .filter(student -> course.getPrerequisites().stream().allMatch(student.getCompletedCourses()::contains))
+                .forEach(student -> {
+                    course.addStudent(student);
+                    System.out.println(student.getName() + " has been registered for " + course.getCourseName());
+                });
     }
     // public double calculateGPA(student student) {
     // Map<course, Double> grades = student.getGrades();

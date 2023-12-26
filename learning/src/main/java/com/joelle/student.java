@@ -1,5 +1,6 @@
 package com.joelle;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -10,7 +11,13 @@ public class student implements user {
     private String name;
    
 
-   
+    List<schedule> schedule ;
+    public List<schedule> getSchedule() {
+        return schedule;
+    }
+    public void setSchedule(List<schedule> schedule) {
+        this.schedule = schedule;
+    }
     private String major;
     private double gpa;
 String contactDetails;
@@ -18,6 +25,13 @@ String contactDetails;
  private String email;
  private String phoneNumber;
     private static long count = 1;
+    private List<course> completedCourses;
+    public List<course> getCompletedCourses() {
+        return completedCourses;
+    }
+    public void setCompletedCourses(List<course> completedCourses) {
+        this.completedCourses = completedCourses;
+    }
     private Map<course, Double> grades = new HashMap<>();
         private Map<course, Double> gradess = new HashMap<>();
 private faculty faculty;
@@ -27,8 +41,10 @@ private faculty faculty;
             this.contactDetails = contactDetails;
             this.major = major;
             this.faculty = faculty;
+             this.completedCourses = new ArrayList<>(); // Initializing the list when a student is created
+    }
 
-        }
+        
          public void setFaculty(faculty faculty) {
         this.faculty = faculty;
     }
