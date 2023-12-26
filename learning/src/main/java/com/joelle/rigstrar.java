@@ -166,8 +166,63 @@ private boolean doSchedulesOverlap(schedule schedule1, schedule schedule2) {
 
         // Add students to the section or class
       
+<<<<<<< HEAD
  // Method to enter grades for a student in a course
  public void enterGrades(student student, course course, double grade) {
+=======
+    public void registerStudentsForCourse(List<student> students, course course) {
+    if (students == null || students.isEmpty() || course == null) {
+        System.out.println("Invalid input: No students or course provided.");
+        return;
+    }
+
+    if (course.getStudentsEnrolled() == null || course.getPrerequisites() == null) {
+        System.out.println("Course properties are not properly initialized.");
+        return;
+    }
+
+    boolean conflictExists = hasConflict(students);
+
+    if (conflictExists) {
+        System.out.println("There is a schedule conflict. Registration for " + course.getCourseName() + " is not allowed.");
+        return;
+    }
+
+    students.stream()
+            .filter(student -> !course.getStudentsEnrolled().contains(student))
+            .filter(student -> course.getPrerequisites().stream().allMatch(student.getCompletedCourses()::contains))
+            .forEach(student -> {
+                course.addStudent(student);
+                System.out.println(student.getName() + " has been registered for " + course.getCourseName());
+            });
+}
+    // public double calculateGPA(student student) {
+    // Map<course, Double> grades = student.getGrades();
+
+    // try (// Create a ForkJoinPool
+    // ForkJoinPool forkJoinPool = new ForkJoinPool()) {
+    // // Create a RecursiveTask to perform parallel computation
+    // RecursiveTask<Double> task = new RecursiveTask<Double>() {
+    // @Override
+    // protected Double compute() {
+    // return grades.entrySet()
+    // .parallelStream()
+    // .mapToDouble(entry -> {
+    // course course = entry.getKey();
+    // double grade = entry.getValue();
+    // double credits = course.getCredits();
+    // return grade * credits; // Calculate grade points for each course
+    // })
+    // .sum(); // Sum all grade points
+    // }
+    // };
+
+    // // Invoke the task in the ForkJoinPool
+    // return forkJoinPool.invoke(task) / grades.size(); // Calculate average GPA
+    // }
+    // }
+
+>>>>>>> 91176298e833cbe57adab05b893e9684845df3a4
  
 
 }
