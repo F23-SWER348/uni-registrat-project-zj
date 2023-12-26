@@ -198,31 +198,31 @@ private boolean doSchedulesOverlap(schedule schedule1, schedule schedule2) {
     }
       
     public void registerStudentsForCourse(List<student> students, course course) {
-        if (students == null || students.isEmpty() || course == null) {
-            System.out.println("Invalid input: No students or course provided.");
-            return;
-        }
-    
-        if (course.getStudentsEnrolled() == null || course.getPrerequisites() == null) {
-            System.out.println("Course properties are not properly initialized.");
-            return;
-        }
-    
-        boolean conflictExists = hasConflict(students);
-    
-        if (conflictExists) {
-            System.out.println("There is a schedule conflict. Registration for " + course.getCourseName() + " is not allowed.");
-            return;
-        }
-    
-        students.stream()
-                .filter(student -> !course.getStudentsEnrolled().contains(student))
-                .filter(student -> course.getPrerequisites().stream().allMatch(student.getCompletedCourses()::contains))
-                .forEach(student -> {
-                    course.addStudent(student);
-                    System.out.println(student.getName() + " has been registered for " + course.getCourseName());
-                });
+    if (students == null || students.isEmpty() || course == null) {
+        System.out.println("Invalid input: No students or course provided.");
+        return;
     }
+
+    if (course.getStudentsEnrolled() == null || course.getPrerequisites() == null) {
+        System.out.println("Course properties are not properly initialized.");
+        return;
+    }
+
+    boolean conflictExists = hasConflict(students);
+
+    if (conflictExists) {
+        System.out.println("There is a schedule conflict. Registration for " + course.getCourseName() + " is not allowed.");
+        return;
+    }
+
+    students.stream()
+            .filter(student -> !course.getStudentsEnrolled().contains(student))
+            .filter(student -> course.getPrerequisites().stream().allMatch(student.getCompletedCourses()::contains))
+            .forEach(student -> {
+                course.addStudent(student);
+                System.out.println(student.getName() + " has been registered for " + course.getCourseName());
+            });
+}
     // public double calculateGPA(student student) {
     // Map<course, Double> grades = student.getGrades();
 
