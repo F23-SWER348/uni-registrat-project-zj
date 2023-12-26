@@ -249,12 +249,6 @@ private boolean doSchedulesOverlap(schedule schedule1, schedule schedule2) {
     // return forkJoinPool.invoke(task) / grades.size(); // Calculate average GPA
     // }
     // }
-
->>>>>>> 91176298e833cbe57adab05b893e9684845df3a4
- 
-
-}
-
 public void generateAcademicReport(student student) {
  
 }
