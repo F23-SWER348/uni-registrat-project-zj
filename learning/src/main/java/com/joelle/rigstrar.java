@@ -50,7 +50,7 @@ public class rigstrar {
 
     public student createStudent(int ID, String name, String contactDetails, String major,faculty faculty,List<course> completedCourses) {
 
-        student student = new student(ID, name, contactDetails, major,faculty);
+        student student = new student(ID, name, contactDetails, major,faculty, completedCourses);
         if (this.students != null) {
             this.students.add(student);
         } else {
@@ -88,7 +88,7 @@ public class rigstrar {
 
     }
 
-    public course createCourse(int courseID, String name, int credits, faculty faculty, List<schedule> schedule) {
+    public course createCourse(int courseID, String name, int credits, faculty faculty, schedule schedule) {
         lock.lock();
         try {
             course course = new course(courseID, name, credits, faculty, schedule);
@@ -270,4 +270,17 @@ private String determineAcademicStanding(double overallGPA) {
         return "Probation";
         }
     }
+
+
+
+public schedule createSchedule(List<DayOfWeek> of, LocalTime of2, LocalTime of3) {
+    return null;
+}
+
+
+
+public course createCourse(int i, String string, faculty faculty1, int j, ArrayList<schedule> arrayList,
+        schedule schedule1) {
+    return null;
+}
 }

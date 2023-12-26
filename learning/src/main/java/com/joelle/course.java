@@ -67,6 +67,11 @@ public course(int courseID, String name, faculty faculty, int credits,List<stude
    
     
 
+    public course(int courseID2, String name2, int credits2, com.joelle.faculty faculty2,
+        com.joelle.schedule schedule2) {
+}
+
+
     public void addStudent(student student) {
         studentsEnrolled.add(student);
     }
