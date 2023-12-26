@@ -13,6 +13,7 @@ public class schedule {
     private LocalTime startTime;
     private LocalTime endTime;
     private List<student> studentsEnrolled = new ArrayList<>();
+    
     public schedule(List<DayOfWeek> studyDays, LocalTime startTime, LocalTime endTime) {
         this.studyDays = studyDays;
         this.startTime = startTime;

@@ -9,8 +9,14 @@ import java.util.stream.Collectors;
 public class student implements user {
     private int id;
     private String name;
-   
+   course  course;
 
+    public course getCourse() {
+    return course;
+}
+public void setCourse(course course) {
+    this.course = course;
+}
     List<schedule> schedule ;
     public List<schedule> getSchedule() {
         return schedule;
@@ -25,7 +31,7 @@ String contactDetails;
  private String email;
  private String phoneNumber;
     private static long count = 1;
-    private List<course> completedCourses;
+    private List<course> completedCourses=new ArrayList<>();
     public List<course> getCompletedCourses() {
         return completedCourses;
     }
@@ -35,13 +41,13 @@ String contactDetails;
     private Map<course, Double> grades = new HashMap<>();
         private Map<course, Double> gradess = new HashMap<>();
 private faculty faculty;
-        public student(int id, String name, String contactDetails, String major,faculty faculty) {
+        public student(int id, String name, String contactDetails, String major,faculty faculty,List<course> completedCourses) {
             this.id = id;
             this.name = name;
             this.contactDetails = contactDetails;
             this.major = major;
             this.faculty = faculty;
-             this.completedCourses = new ArrayList<>(); // Initializing the list when a student is created
+             this.completedCourses = completedCourses ;
     }
 
         
