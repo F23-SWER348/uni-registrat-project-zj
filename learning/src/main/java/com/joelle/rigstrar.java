@@ -4,12 +4,12 @@ import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 import java.util.stream.Collectors;
+
 
 public class rigstrar {
 
@@ -48,9 +48,9 @@ public class rigstrar {
         return staff;
     }
 
-    public student createStudent(int ID, String name, String contactDetails, String major,faculty faculty,List<course> completedCourses) {
+    public student createStudent(int ID, String name, String major,faculty faculty,String email,String phoneNumber ) {
 
-        student student = new student(ID, name, contactDetails, major,faculty, completedCourses);
+        student student = new student(ID, name, major,faculty, email,phoneNumber);
         if (this.students != null) {
             this.students.add(student);
         } else {
@@ -62,8 +62,8 @@ public class rigstrar {
 
     }
 
-    public faculty createFaculty(int facultyID, String name, String contactDetails, String role) {
-        faculty faculty = new faculty(facultyID, name, contactDetails, role);
+    public faculty createFaculty(int facultyID, String name, String phoneNumber,String email, String role) {
+        faculty faculty = new faculty(facultyID, name, phoneNumber,email, role);
         if (this.facultys != null) {
             this.facultys.add(faculty);
         } else {
@@ -73,10 +73,12 @@ public class rigstrar {
         }
         return faculty;
     }
+    
+   
 
     public semester createSemester(int semesterID, String name, LocalDate startDate, LocalDate endDate,
             String contactsemesterDetails) {
-        semester Semester = new semester(semesterID, name, startDate, endDate, contactsemesterDetails);
+        semester Semester = new semester(semesterID, name, startDate, endDate);
         if (this.semesters != null) {
             this.semesters.add(Semester);
         } else {
@@ -87,11 +89,22 @@ public class rigstrar {
         return Semester;
 
     }
+    public schedule createSchedule(List<DayOfWeek> studyDays, LocalTime startTime, LocalTime endTime) {
+        schedule newSchedule = new schedule(studyDays, startTime, endTime);
+        if (this.schedules != null) {
+            this.schedules.add(newSchedule); // Add the new schedule to the schedules list
+        } else {
+            System.out.println("Error: schedules list is not initialized.");
+            // Handle the error accordingly
+        }
+        return newSchedule; // Return the newly created schedule
 
-    public course createCourse(int courseID, String name, int credits, faculty faculty, schedule schedule) {
+    }
+
+    public course createCourse(int courseID, String name, faculty faculty,int credits,schedule schedule ,semester semester) {
         lock.lock();
         try {
-            course course = new course(courseID, name, credits, faculty, schedule);
+            course course = new course(courseID, name, faculty ,credits, schedule,semester);
             
             if (this.courses != null) {
                 this.courses.add(course);
@@ -106,7 +119,7 @@ public class rigstrar {
         }
     }
 
-    public void browseCourses(List<course> courses) {
+    public void browseCourses() {
         System.out.println("Available Courses:");
         courses.stream()
                 .map(c -> "Course ID: " + c.getCourseID() +
@@ -121,45 +134,42 @@ public class rigstrar {
 
        
 
-    private boolean hasConflict(List<student> students) {
-        if (students == null || students.isEmpty()) {
-            return false; // No students, hence no conflicts
-        }
-    
-        List<schedule> allSchedules = students.stream()
-                .flatMap(student -> {
-                    List<schedule> studentSchedules = student.getSchedule();
-                    return studentSchedules != null ? studentSchedules.stream() : null;
-                })
-                .filter(schedule -> schedule != null)
-                .collect(Collectors.toList());
-    
-        return allSchedules.stream()
-                .anyMatch(schedule1 -> allSchedules.stream()
-                        .filter(schedule2 -> !schedule1.equals(schedule2))
-                        .filter(schedule2 -> haveCommonDay(schedule1, schedule2))
-                        .anyMatch(schedule2 -> doSchedulesOverlap(schedule1, schedule2)));
-    }
-    
-    
-    // Helper method to check if schedules occur on the same day
-    private boolean haveCommonDay(schedule schedule1, schedule schedule2) {
-        List<DayOfWeek> days1 = schedule1.getStudyDays();
-        List<DayOfWeek> days2 = schedule2.getStudyDays();
-    
-        return days1.stream().anyMatch(days2::contains);
-    }
-    
-    // Helper method to check if schedules have overlapping time slots
-private boolean doSchedulesOverlap(schedule schedule1, schedule schedule2) {
-    LocalTime start1 = schedule1.getStartTime();
-    LocalTime end1 = schedule1.getEndTime();
-    LocalTime start2 = schedule2.getStartTime();
-    LocalTime end2 = schedule2.getEndTime();
+    private boolean hasConflict(course course1, course course2) {
+        schedule schedule1 = course1.getSchedule();
+        schedule schedule2 = course2.getSchedule();
 
-    return !(start1.isAfter(end2) || start2.isAfter(end1));
-}
-       
+        // Check if the schedules are on the same day
+        boolean sameDay = doSchedulesOverlap(schedule1, schedule2);
+
+        // Check for time overlap
+        boolean timeOverlap = doSchedulesOverlap(schedule1, schedule2);
+
+        return sameDay && timeOverlap;
+    }
+
+    private boolean doSchedulesOverlap(schedule schedule1, schedule schedule2) {
+        if (schedule1 == null || schedule2 == null) {
+            return false; // Handle cases where schedule1 or schedule2 is null
+        }
+
+        List<DayOfWeek> studyDays1 = schedule1.getStudyDays();
+        List<DayOfWeek> studyDays2 = schedule2.getStudyDays();
+
+        boolean sameDay = studyDays1.stream().anyMatch(studyDays2::contains);
+
+        if (!sameDay) {
+            return false; // No conflict if not on the same day
+        }
+
+        LocalTime start1 = schedule1.getStartTime();
+        LocalTime end1 = schedule1.getEndTime();
+        LocalTime start2 = schedule2.getStartTime();
+        LocalTime end2 = schedule2.getEndTime();
+
+        // Check for time overlap
+        return !(start1.isAfter(end2) || start2.isAfter(end1));
+    }
+
     
 
     
@@ -195,35 +205,39 @@ private boolean doSchedulesOverlap(schedule schedule1, schedule schedule2) {
                         () -> System.out.println("No prerequisites information available for " + course.getCourseName())
                 );
     }
-
-        // Add students to the section or class
       
-    public void registerStudentsForCourse(List<student> students, course course) {
-    if (students == null || students.isEmpty() || course == null) {
-        System.out.println("Invalid input: No students or course provided.");
-        return;
+    public void registerStudentForCourse(student student, course course) {
+        if (student == null || course == null) {
+            System.out.println("Invalid input: Student or course provided is null.");
+        }
+    
+        List<course> studentCourses = student.getCompletedCourses() ;// Assuming this method exists to get student's enrolled courses
+    
+        boolean conflictExists = studentCourses.stream()
+                .anyMatch(enrolledCourse -> hasConflict(course, enrolledCourse));
+    
+        if (conflictExists) {
+            System.out.println("There is a schedule conflict. Registration for " + course.getCourseName() + " is not allowed.");
+        }
+    
+        if (!course.getStudentsEnrolled().contains(student)) {
+            student.getCompletedCourses().add(course);
+            course.addStudent(student);     
+            System.out.println(student.getName() + " has been registered for " + course.getCourseName());
+        } else {
+            System.out.println(student.getName() + " is already registered for " + course.getCourseName());
+        }
     }
 
-    if (course.getStudentsEnrolled() == null || course.getPrerequisites() == null) {
-        System.out.println("Course properties are not properly initialized.");
-        return;
+    public void addCourseToStaff(staff staff, course course) {
+        if (staff == null || course == null) {
+            throw new IllegalArgumentException("Invalid input: Staff or course provided is null.");
+        }
+
+        staff.setteachescourse(course);
+        course.setStaff(staff);
+        System.out.println("Course " + course.getCourseName() + " added to staff " + staff.getName() + "'s teaching courses.");
     }
-
-    boolean conflictExists = hasConflict(students);
-
-    if (conflictExists) {
-        System.out.println("There is a schedule conflict. Registration for " + course.getCourseName() + " is not allowed.");
-        return;
-    }
-
-    students.stream()
-            .filter(student -> !course.getStudentsEnrolled().contains(student))
-            .filter(student -> course.getPrerequisites().stream().allMatch(student.getCompletedCourses()::contains))
-            .forEach(student -> {
-                course.addStudent(student);
-                System.out.println(student.getName() + " has been registered for " + course.getCourseName());
-            });
-}
     // public double calculateGPA(student student) {
     // Map<course, Double> grades = student.getGrades();
 
@@ -249,12 +263,26 @@ private boolean doSchedulesOverlap(schedule schedule1, schedule schedule2) {
     // return forkJoinPool.invoke(task) / grades.size(); // Calculate average GPA
     // }
     // }
-public void generateAcademicReport(student student) {
- 
-}
 
-private String determineAcademicStanding(double overallGPA) {
-    if (overallGPA >= 3.8) {
+ 
+
+    // Method to enter grades for a student in a course
+    public void enterGrades(student student, course course, double grade) {
+        // perarel
+    }
+ public List<course> coursesInSemester(semester semester) {
+        if (semester == null) {
+            throw new IllegalArgumentException("Invalid input: Semester is null.");
+        }
+
+        return courses.stream()
+                .filter(course -> course.getSemester().equals(semester))
+                .collect(Collectors.toList());
+    }
+    public String generateAcademicReport(student student) {
+        Optional<student> stu=students.stream().filter(s -> s.getId() == student.getId()).findFirst();
+       double overallGPA= stu.get().getGpa();
+        if (overallGPA >= 3.8) {
         return "Highest Honours";
         } else if (overallGPA >= 3.5) {
         return "Honours";
@@ -264,17 +292,4 @@ private String determineAcademicStanding(double overallGPA) {
         return "Probation";
         }
     }
-
-
-
-public schedule createSchedule(List<DayOfWeek> of, LocalTime of2, LocalTime of3) {
-    return null;
-}
-
-
-
-public course createCourse(int i, String string, faculty faculty1, int j, ArrayList<schedule> arrayList,
-        schedule schedule1) {
-    return null;
-}
 }

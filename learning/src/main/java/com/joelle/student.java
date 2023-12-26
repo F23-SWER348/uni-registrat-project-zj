@@ -9,45 +9,39 @@ import java.util.stream.Collectors;
 public class student implements user {
     private int id;
     private String name;
-   course  course;
+    List<schedule> schedule;
+    private String major;
+    private double gpa;
+    String role;
+    private String email;
+    private String phoneNumber;
+    private List<course> completedCourses=new ArrayList<>();
+    private Map<course, Double> gradess = new HashMap<>();
+    private faculty faculty;
 
-    public course getCourse() {
-    return course;
-}
-public void setCourse(course course) {
-    this.course = course;
-}
-    List<schedule> schedule ;
+
+
+
     public List<schedule> getSchedule() {
         return schedule;
     }
     public void setSchedule(List<schedule> schedule) {
         this.schedule = schedule;
     }
-    private String major;
-    private double gpa;
-String contactDetails;
- String role;
- private String email;
- private String phoneNumber;
-    private static long count = 1;
-    private List<course> completedCourses=new ArrayList<>();
+   
     public List<course> getCompletedCourses() {
         return completedCourses;
     }
-    public void setCompletedCourses(List<course> completedCourses) {
-        this.completedCourses = completedCourses;
-    }
-    private Map<course, Double> grades = new HashMap<>();
-        private Map<course, Double> gradess = new HashMap<>();
-private faculty faculty;
-        public student(int id, String name, String contactDetails, String major,faculty faculty,List<course> completedCourses) {
+    
+  
+        public student(int id, String name, String major,faculty faculty,String email,String phoneNumber) {
             this.id = id;
             this.name = name;
-            this.contactDetails = contactDetails;
             this.major = major;
             this.faculty = faculty;
-             this.completedCourses = completedCourses ;
+            this.email = email;
+            this.phoneNumber = phoneNumber;
+
     }
 
         
@@ -61,81 +55,50 @@ private faculty faculty;
         this.id = id;
     }
 
-    public synchronized void setContactDetails(String contactDetails) {
-        this.contactDetails = contactDetails;
-    }
-
     public synchronized void  setRole(String role) {
         this.role = role;
     }
 
-    public static synchronized void setCount(long count) {
-        student.count = count;
-    }
+   
 
-    public Map<course, Double> getGrades() {
-        return grades;
-    }
 
-    public void setGrades(Map<course, Double> grades) {
-        this.grades = grades;
-    }
 
     public Map<course, Double> getGradess() {
         return gradess;
     }
 
     public String getEmail() {
-        return "stu123@betleem.edu";
+        return email;
     }
 
-    public void setEmail(String email) {
-        this.email = "stu123@betleem.edu";
-    }
+ 
 
     public String getPhoneNumber() {
-        return "05987545";
+        return phoneNumber;
     }
 
-    public void setPhoneNumber(String phoneNumber) {
-        this.phoneNumber = "05987545";
-    }
 
-    public void setGradess(Map<course, Double> gradess) {
+    public synchronized void setGradess(Map<course, Double> gradess) {
         this.gradess = gradess;
     }
 
     public String getName() {
         return name;
     }
-    public void setName(String name) {
-        this.name = name;
-    }
+  
     public String getMajor() {
         return major;
     }
-    public void setMajor(String major) {
-        this.major = major;
-    }
+  
     public double getGpa() {
         return gpa;
     }
-    public void setGpa(double gpa) {
+
+    public synchronized void setGpa(double gpa) {
 
         this.gpa = gpa;
     }
-  
-
-    @Override
-    public String toString() {        
-        return name + " " + major + " " + gpa;
-    }
-
-    public static long getCount() {
-        return count;
-    }
-
-    public long getId() {
+public long getId() {
         return id;
     }
 

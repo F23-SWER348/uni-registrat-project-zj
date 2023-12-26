@@ -1,10 +1,9 @@
 package com.joelle;
 
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
-import com.joelle.user.UserRole;
 
 
     public class staff implements user{
@@ -12,10 +11,11 @@ import com.joelle.user.UserRole;
         private String staffID;
         private String name;
         private String email;
-        private String phoneNumber;
-    
+        private String phoneNumber;    
+        private ArrayList<course> givescourse;
+
         // Constructor
-        public staff(String staffID, String name,String phoneNumber,String email) {
+        public staff(String staffID, String name,String email,String phoneNumber) {
             this.staffID = staffID;
             this.name = name;
             this.phoneNumber = phoneNumber;
@@ -23,16 +23,24 @@ import com.joelle.user.UserRole;
 
 
         }
+    public ArrayList<course> getGivescourse() {
+            return givescourse;
+        }
+
+       public synchronized void setteachescourse(course c){
+              givescourse.add(c);
+       }
+
     
         public String getStaffID() {
             return staffID;
         }
 
-        public void setStaffID(String staffID) {
+        public synchronized void setStaffID(String staffID) {
             this.staffID = staffID;
         }
 
-        public void setName(String name) {
+        public synchronized void setName(String name) {
             this.name = name;
         }
 
@@ -41,7 +49,7 @@ import com.joelle.user.UserRole;
             return email;
         }
 
-        public void setEmail(String email) {
+        public synchronized void setEmail(String email) {
             this.email=email;;
         }
 
@@ -49,25 +57,14 @@ import com.joelle.user.UserRole;
             return phoneNumber;
         }
 
-        public void setPhoneNumber(String phoneNumber) {
+        public synchronized void setPhoneNumber(String phoneNumber) {
             this.phoneNumber=phoneNumber;
         }
 
-     
-       
-
-      
         public String getName() {
             return name;
         }
     
-    
-    
-        
- 
-    
-        
-
         @Override
         public String getContactDetails() {
         if (email != null && phoneNumber != null) {
@@ -76,9 +73,6 @@ import com.joelle.user.UserRole;
             return "Contact details are incomplete";
         }
     }
-
-    
-
     public static List<String> getContactDetailsList(List<staff> staffList) {
         return staffList.stream()
                 .map(staff::getContactDetails)

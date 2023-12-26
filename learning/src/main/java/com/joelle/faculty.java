@@ -7,34 +7,29 @@ public class faculty implements user{
   
     private int facultyID;
     private String name;
-    private String contactDetails;
     String email;
     String phoneNumber;
 String role;
-    public faculty(int facultyID, String name, String contactDetails,String role) {
+    public faculty(int facultyID, String name,String email, String phoneNumber,String role) {
         this.facultyID = facultyID;
         this.name = name;
-        this.contactDetails = contactDetails;
         this.role=role;
+        this.email=email;
+        this.phoneNumber=phoneNumber;
     }
 
  
 
-    public void setFacultyID(int facultyID) {
+    public synchronized void setFacultyID(int facultyID) {
         this.facultyID = facultyID;
     }
 
 
 
-    public void setName(String name) {
+    public synchronized void setName(String name) {
         this.name = name;
     }
 
-
-
-    public void setContactDetails(String contactDetails) {
-        this.contactDetails = contactDetails;
-    }
 
 
 
@@ -44,25 +39,14 @@ String role;
 
 
 
-    public void setEmail(String email) {
-        this.email = "facult@kkfgbgb";
-    }
-
-
-
-    public String getPhoneNumber() {
+    public synchronized String getPhoneNumber() {
         return phoneNumber;
     }
 
 
 
-    public void setPhoneNumber(String phoneNumber) {
-        this.phoneNumber = "34578558";
-    }
 
-
-
-    public void setRole(String role) {
+    public synchronized void setRole(String role) {
         this.role = role;
     }
 
