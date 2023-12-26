@@ -7,9 +7,17 @@ public class course {
     private int courseID;
     private String name;
     private faculty faculty;
-    private List<student> studentsEnrolled ;
+    private List<student> studentsEnrolled =new ArrayList<>();
     private int credits;
-    List<schedule> schedule ;
+    schedule schedule ;
+public schedule getSchedule() {
+        return schedule;
+    }
+
+
+    public void setSchedule(schedule schedule) {
+        this.schedule = schedule;
+    }
 ArrayList<course> prerequisites ;
 public String getName() {
     return name;
@@ -46,18 +54,16 @@ ArrayList<semester> meetingSemesters;
     public List<semester> getMeetingSemesters() {
     return meetingSemesters;
 }
-public course(int courseID, String name, faculty faculty, List<student> studentsEnrolled , int credits, List<schedule> schedule) { 
+public course(int courseID, String name, faculty faculty, int credits,List<student> studentsEnrolled, schedule schedule) { 
     this.courseID = courseID;
     this.name = name;
     this.faculty = faculty;
     this.credits = credits;
-
+    this.studentsEnrolled = studentsEnrolled;
+    this.schedule= schedule;
     // Initialize the lists
-    this.studentsEnrolled = new ArrayList<>(studentsEnrolled != null ? studentsEnrolled : new ArrayList<>());
-    this.schedule = new ArrayList<>(schedule != null ? schedule : new ArrayList<>());
-    this.prerequisites = new ArrayList<>();
+   
 }
-
    
     
 
@@ -92,9 +98,7 @@ public course(int courseID, String name, faculty faculty, List<student> students
     public int getCredits() {
         return credits;
     }
-    public List<schedule> getSchedule() {
-        return schedule;
-    }
+   
 
    
 }
