@@ -12,7 +12,7 @@ public class schedule {
     private List<DayOfWeek> studyDays;
     private LocalTime startTime;
     private LocalTime endTime;
-
+    private List<student> studentsEnrolled = new ArrayList<>();
     public schedule(List<DayOfWeek> studyDays, LocalTime startTime, LocalTime endTime) {
         this.studyDays = studyDays;
         this.startTime = startTime;
@@ -21,6 +21,9 @@ public class schedule {
 
     public List<DayOfWeek> getStudyDays() {
         return studyDays;
+    }
+    public void addStudents(List<student> students) {
+        studentsEnrolled.addAll(students);
     }
 
     public LocalTime getStartTime() {
@@ -37,4 +40,9 @@ public class schedule {
         } else {
             return "There are no lectures on this day.";
         }
-      }}
+      }
+
+      public List<student> listEnrolledStudents() {
+        return studentsEnrolled;
+    }
+}
