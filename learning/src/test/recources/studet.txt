@@ -1,0 +1,15 @@
+1,John Doe,Computer Science,Engineering,john.doe@example.com,123-456-7890
+2,Jane Smith,Electrical Engineering,Engineering,jane.smith@example.com,987-654-3210
+3,Bob Johnson,Physics,Science,bob.johnson@example.com,555-123-4567
+4,Alice Williams,Mathematics,Science,alice.williams@example.com,111-222-3333
+5,David Brown,Chemistry,Science,david.brown@example.com,444-555-6666
+6,Emily Davis,Information Technology,Engineering,emily.davis@example.com,777-888-9999
+7,Michael Miller,Biology,Science,michael.miller@example.com,123-987-6543
+8,Sarah Wilson,Civil Engineering,Engineering,sarah.wilson@example.com,321-555-8888
+9,Christopher Turner,Psychology,Arts,chris.turner@example.com,555-111-7777
+10,Olivia Lee,Environmental Science,Science,olivia.lee@example.com,999-333-1111
+11,Nathan Carter,Mechanical Engineering,Engineering,nathan.carter@example.com,444-777-2222
+12,Grace Martinez,English,Arts,grace.martinez@example.com,666-222-8888
+13,Ethan Walker,Finance,Business,ethan.walker@example.com,888-666-4444
+14,Ava Moore,History,Arts,ava.moore@example.com,111-777-3333
+15,Liam Hall,Computer Engineering,Engineering,liam.hall@example.com,222-999-5555

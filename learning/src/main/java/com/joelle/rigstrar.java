@@ -5,6 +5,7 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
@@ -229,15 +230,7 @@ public class rigstrar {
         }
     }
 
-    public void addCourseToStaff(staff staff, course course) {
-        if (staff == null || course == null) {
-            throw new IllegalArgumentException("Invalid input: Staff or course provided is null.");
-        }
-
-        staff.setteachescourse(course);
-        course.setStaff(staff);
-        System.out.println("Course " + course.getCourseName() + " added to staff " + staff.getName() + "'s teaching courses.");
-    }
+    
     // public double calculateGPA(student student) {
     // Map<course, Double> grades = student.getGrades();
 
@@ -263,13 +256,44 @@ public class rigstrar {
     // return forkJoinPool.invoke(task) / grades.size(); // Calculate average GPA
     // }
     // }
-
- 
-
     // Method to enter grades for a student in a course
     public void enterGrades(student student, course course, double grade) {
         // perarel
     }
+ public void addCourseToStaff(staff staff, course course) {
+        if (staff == null || course == null) {
+            throw new IllegalArgumentException("Invalid input: Staff or course provided is null.");
+        }
+
+        staff.setteachescourse(course);
+        course.setStaff(staff);
+        System.out.println("Course " + course.getCourseName() + " added to staff " + staff.getName() + "'s teaching courses.");
+    }
+     public double calculateStudentGPA(student student) {
+        Map<course, Double> grades = student.getGradess();
+
+        double totalGradePoints = grades.entrySet().stream()
+                .mapToDouble(entry -> {
+                    course course = entry.getKey();
+                    double grade = entry.getValue();
+                    double credits = course.getCredits();
+                    return grade * credits;
+                })
+                .sum();
+
+        double totalCredits = grades.keySet().stream()
+                .mapToDouble(course -> course.getCredits())
+                .sum();
+
+        // Avoid division by zero
+        if (totalCredits == 0.0) {
+            return 0.0;
+        }
+
+        return totalGradePoints / totalCredits;
+    }
+
+
  public List<course> coursesInSemester(semester semester) {
         if (semester == null) {
             throw new IllegalArgumentException("Invalid input: Semester is null.");
