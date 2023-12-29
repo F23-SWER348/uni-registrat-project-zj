@@ -4,9 +4,12 @@ import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.concurrent.ForkJoinPool;
+import java.util.concurrent.RecursiveTask;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 import java.util.stream.Collectors;
@@ -191,6 +194,8 @@ public class rigstrar {
                     );
         
       }
+
+      
       public void viewPrerequisites(course course) {
         Optional.ofNullable(course)
                 .map(courseObj -> courseObj.getPrerequisites())
@@ -230,37 +235,13 @@ public class rigstrar {
         }
     }
 
-    
-    // public double calculateGPA(student student) {
-    // Map<course, Double> grades = student.getGrades();
 
-    // try (// Create a ForkJoinPool
-    // ForkJoinPool forkJoinPool = new ForkJoinPool()) {
-    // // Create a RecursiveTask to perform parallel computation
-    // RecursiveTask<Double> task = new RecursiveTask<Double>() {
-    // @Override
-    // protected Double compute() {
-    // return grades.entrySet()
-    // .parallelStream()
-    // .mapToDouble(entry -> {
-    // course course = entry.getKey();
-    // double grade = entry.getValue();
-    // double credits = course.getCredits();
-    // return grade * credits; // Calculate grade points for each course
-    // })
-    // .sum(); // Sum all grade points
-    // }
-    // };
 
-    // // Invoke the task in the ForkJoinPool
-    // return forkJoinPool.invoke(task) / grades.size(); // Calculate average GPA
-    // }
-    // }
-    // Method to enter grades for a student in a course
-    public void enterGrades(student student, course course, double grade) {
-        // perarel
-    }
- public void addCourseToStaff(staff staff, course course) {
+   
+
+   
+
+    public void addCourseToStaff(staff staff, course course) {
         if (staff == null || course == null) {
             throw new IllegalArgumentException("Invalid input: Staff or course provided is null.");
         }
@@ -269,40 +250,49 @@ public class rigstrar {
         course.setStaff(staff);
         System.out.println("Course " + course.getCourseName() + " added to staff " + staff.getName() + "'s teaching courses.");
     }
-     public double calculateStudentGPA(student student) {
-        Map<course, Double> grades = student.getGradess();
+   
 
-        double totalGradePoints = grades.entrySet().stream()
-                .mapToDouble(entry -> {
-                    course course = entry.getKey();
-                    double grade = entry.getValue();
-                    double credits = course.getCredits();
-                    return grade * credits;
-                })
-                .sum();
-
-        double totalCredits = grades.keySet().stream()
-                .mapToDouble(course -> course.getCredits())
-                .sum();
-
-        // Avoid division by zero
-        if (totalCredits == 0.0) {
-            return 0.0;
-        }
-
-        return totalGradePoints / totalCredits;
-    }
-
-
- public List<course> coursesInSemester(semester semester) {
+    public List<course> coursesInSemester(semester semester) {
         if (semester == null) {
-            throw new IllegalArgumentException("Invalid input: Semester is null.");
+        throw new IllegalArgumentException("Invalid input: Semester is null.");
         }
 
         return courses.stream()
-                .filter(course -> course.getSemester().equals(semester))
-                .collect(Collectors.toList());
+        .filter(course -> course.getSemester().equals(semester)).collect(Collectors.toList());
+    }  
+
+
+    public void enterGrades(student student, course course, double grade) {
+        Map<course, Double> studentGrades = new HashMap<>();
+        studentGrades.put(course, grade);
+        student.setGradess(studentGrades);
     }
+    
+ 
+    public double calculateGPA(student student) {
+
+    Map<course, Double> grades = student.getGradess();
+
+    try ( ForkJoinPool forkJoinPool = new ForkJoinPool()){
+        
+    RecursiveTask<Double> task = new RecursiveTask<Double>() {
+    @Override
+    protected Double compute() {
+    return grades.entrySet().parallelStream().mapToDouble(entry -> {
+     course course = entry.getKey();
+    double grade = entry.getValue();
+    double credits = course.getCredits();
+    return grade * credits; // Calculate grade points for each course
+    }).sum();   } };
+    
+    double totalCredits = grades.entrySet().stream().mapToDouble(entry -> entry.getKey().getCredits()).sum();
+            
+    if (totalCredits == 0) {return 0.0;}
+        
+    return forkJoinPool.invoke(task) / totalCredits;  }
+    }
+
+
     public String generateAcademicReport(student student) {
         Optional<student> stu=students.stream().filter(s -> s.getId() == student.getId()).findFirst();
        double overallGPA= stu.get().getGpa();
