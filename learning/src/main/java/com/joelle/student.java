@@ -78,8 +78,9 @@ public class student implements user {
     }
 
 
-    public synchronized void setGradess(Map<course, Double> gradess) {
-        this.gradess = gradess;
+    public synchronized void setGradess(course course, Double grade) {
+        gradess.put(course, grade);
+
     }
 
     public String getName() {

@@ -10,10 +10,9 @@ public class faculty implements user{
     String email;
     String phoneNumber;
 String role;
-    public faculty(int facultyID, String name,String email, String phoneNumber,String role) {
+    public faculty(int facultyID, String name,String email, String phoneNumber) {
         this.facultyID = facultyID;
         this.name = name;
-        this.role=role;
         this.email=email;
         this.phoneNumber=phoneNumber;
     }

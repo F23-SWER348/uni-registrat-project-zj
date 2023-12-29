@@ -66,8 +66,8 @@ public class rigstrar {
 
     }
 
-    public faculty createFaculty(int facultyID, String name, String phoneNumber,String email, String role) {
-        faculty faculty = new faculty(facultyID, name, phoneNumber,email, role);
+    public faculty createFaculty(int facultyID, String name, String phoneNumber,String email) {
+        faculty faculty = new faculty(facultyID, name, phoneNumber,email);
         if (this.facultys != null) {
             this.facultys.add(faculty);
         } else {
@@ -80,8 +80,7 @@ public class rigstrar {
     
    
 
-    public semester createSemester(int semesterID, String name, LocalDate startDate, LocalDate endDate,
-            String contactsemesterDetails) {
+    public semester createSemester(int semesterID, String name, LocalDate startDate, LocalDate endDate) {
         semester Semester = new semester(semesterID, name, startDate, endDate);
         if (this.semesters != null) {
             this.semesters.add(Semester);
@@ -195,7 +194,7 @@ public class rigstrar {
         
       }
 
-      
+
       public void viewPrerequisites(course course) {
         Optional.ofNullable(course)
                 .map(courseObj -> courseObj.getPrerequisites())
@@ -263,9 +262,8 @@ public class rigstrar {
 
 
     public void enterGrades(student student, course course, double grade) {
-        Map<course, Double> studentGrades = new HashMap<>();
-        studentGrades.put(course, grade);
-        student.setGradess(studentGrades);
+        student.setGradess(course,grade);
+     
     }
     
  
@@ -289,21 +287,33 @@ public class rigstrar {
             
     if (totalCredits == 0) {return 0.0;}
         
-    return forkJoinPool.invoke(task) / totalCredits;  }
+    double d= forkJoinPool.invoke(task) / totalCredits; 
+    student.setGpa(d);
+    return d;
+ } 
     }
 
 
     public String generateAcademicReport(student student) {
-        Optional<student> stu=students.stream().filter(s -> s.getId() == student.getId()).findFirst();
-       double overallGPA= stu.get().getGpa();
-        if (overallGPA >= 3.8) {
-        return "Highest Honours";
-        } else if (overallGPA >= 3.5) {
-        return "Honours";
-        } else if (overallGPA >= 2.0) {
-        return "Good Standing";
+        
+    
+        if (student != null) {
+            double overallGPA = student.getGpa();
+    
+            if (overallGPA >= 3.8) {
+                return "Highest Honours";
+            } else if (overallGPA >= 3.5) {
+                return "Honours";
+            } else if (overallGPA >= 2.0) {
+                return "Good Standing";
+            } else {
+                return "Probation";
+            }
         } else {
-        return "Probation";
+            // Handle the case where the student is not found
+            return "Student not found";
         }
     }
+    
+    
 }
