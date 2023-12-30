@@ -210,6 +210,7 @@ public class rigstrar {
         if (student == null || course == null) {
             System.out.println("Invalid input: Student or course provided is null.");
             return;
+            
         }
     
         List<course> studentCourses = student.getCompletedCourses() ;// Assuming this method exists to get student's enrolled courses
