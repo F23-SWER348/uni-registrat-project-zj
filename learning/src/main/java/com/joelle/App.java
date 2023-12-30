@@ -25,6 +25,7 @@ public class App
             LocalTime.of(11, 0) // End time
 
     );
+    
 
     // Create a faculty
     faculty faculty1 = registrar.createFaculty(1, "Faculty of Science", "Contact details", "Role");
@@ -39,8 +40,10 @@ public class App
             schedule1 // Created schedule
           
     );
+    
 
     // Create a student
-    
+   
+
     }}
     
