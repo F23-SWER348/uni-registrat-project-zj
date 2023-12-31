@@ -4,12 +4,16 @@ import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.ArrayList;
-import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
+import java.util.concurrent.ForkJoinPool;
+import java.util.concurrent.RecursiveTask;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 import java.util.stream.Collectors;
+
 
 public class rigstrar {
 
@@ -48,9 +52,9 @@ public class rigstrar {
         return staff;
     }
 
-    public student createStudent(int ID, String name, String contactDetails, String major,faculty faculty,List<course> completedCourses) {
+    public student createStudent(int ID, String name, String major,faculty faculty,String email,String phoneNumber ) {
 
-        student student = new student(ID, name, contactDetails, major,faculty, completedCourses);
+        student student = new student(ID, name, major,faculty, email,phoneNumber);
         if (this.students != null) {
             this.students.add(student);
         } else {
@@ -62,8 +66,8 @@ public class rigstrar {
 
     }
 
-    public faculty createFaculty(int facultyID, String name, String contactDetails, String role) {
-        faculty faculty = new faculty(facultyID, name, contactDetails, role);
+    public faculty createFaculty(int facultyID, String name, String phoneNumber,String email) {
+        faculty faculty = new faculty(facultyID, name, phoneNumber,email);
         if (this.facultys != null) {
             this.facultys.add(faculty);
         } else {
@@ -76,9 +80,8 @@ public class rigstrar {
     
    
 
-    public semester createSemester(int semesterID, String name, LocalDate startDate, LocalDate endDate,
-            String contactsemesterDetails) {
-        semester Semester = new semester(semesterID, name, startDate, endDate, contactsemesterDetails);
+    public semester createSemester(int semesterID, String name, LocalDate startDate, LocalDate endDate) {
+        semester Semester = new semester(semesterID, name, startDate, endDate);
         if (this.semesters != null) {
             this.semesters.add(Semester);
         } else {
@@ -101,10 +104,10 @@ public class rigstrar {
 
     }
 
-    public course createCourse(int courseID, String name, faculty faculty,int credits,List<student> studentsEnrolled,schedule schedule) {
+    public course createCourse(int courseID, String name, faculty faculty,int credits,schedule schedule ,semester semester) {
         lock.lock();
         try {
-            course course = new course(courseID, name, faculty ,credits,studentsEnrolled, schedule);
+            course course = new course(courseID, name, faculty ,credits, schedule,semester);
             
             if (this.courses != null) {
                 this.courses.add(course);
@@ -190,6 +193,8 @@ public class rigstrar {
                     );
         
       }
+
+
       public void viewPrerequisites(course course) {
         Optional.ofNullable(course)
                 .map(courseObj -> courseObj.getPrerequisites())
@@ -209,8 +214,6 @@ public class rigstrar {
     public void registerStudentForCourse(student student, course course) {
         if (student == null || course == null) {
             System.out.println("Invalid input: Student or course provided is null.");
-            return;
-            
         }
     
         List<course> studentCourses = student.getCompletedCourses() ;// Assuming this method exists to get student's enrolled courses
@@ -220,61 +223,97 @@ public class rigstrar {
     
         if (conflictExists) {
             System.out.println("There is a schedule conflict. Registration for " + course.getCourseName() + " is not allowed.");
-            return;
         }
     
         if (!course.getStudentsEnrolled().contains(student)) {
-            course.addStudent(student);
+            student.getCompletedCourses().add(course);
+            course.addStudent(student);     
             System.out.println(student.getName() + " has been registered for " + course.getCourseName());
         } else {
             System.out.println(student.getName() + " is already registered for " + course.getCourseName());
         }
     }
-    // public double calculateGPA(student student) {
-    // Map<course, Double> grades = student.getGrades();
 
-    // try (// Create a ForkJoinPool
-    // ForkJoinPool forkJoinPool = new ForkJoinPool()) {
-    // // Create a RecursiveTask to perform parallel computation
-    // RecursiveTask<Double> task = new RecursiveTask<Double>() {
-    // @Override
-    // protected Double compute() {
-    // return grades.entrySet()
-    // .parallelStream()
-    // .mapToDouble(entry -> {
-    // course course = entry.getKey();
-    // double grade = entry.getValue();
-    // double credits = course.getCredits();
-    // return grade * credits; // Calculate grade points for each course
-    // })
-    // .sum(); // Sum all grade points
-    // }
-    // };
 
-    // // Invoke the task in the ForkJoinPool
-    // return forkJoinPool.invoke(task) / grades.size(); // Calculate average GPA
-    // }
-    // }
 
- 
+   
 
-    // Method to enter grades for a student in a course
-    public void enterGrades(student student, course course, double grade) {
-        // perarel
+   
 
+    public void addCourseToStaff(staff staff, course course) {
+        if (staff == null || course == null) {
+            throw new IllegalArgumentException("Invalid input: Staff or course provided is null.");
+        }
+
+        staff.setteachescourse(course);
+        course.setStaff(staff);
+        System.out.println("Course " + course.getCourseName() + " added to staff " + staff.getName() + "'s teaching courses.");
     }
+   
+
+    public List<course> coursesInSemester(semester semester) {
+        if (semester == null) {
+        throw new IllegalArgumentException("Invalid input: Semester is null.");
+        }
+
+        return courses.stream()
+        .filter(course -> course.getSemester().equals(semester)).collect(Collectors.toList());
+    }  
+
+
+    public void enterGrades(student student, course course, double grade) {
+        student.setGradess(course,grade);
+     
+    }
+    
+ 
+    public double calculateGPA(student student) {
+
+    Map<course, Double> grades = student.getGradess();
+
+    try ( ForkJoinPool forkJoinPool = new ForkJoinPool()){
+        
+    RecursiveTask<Double> task = new RecursiveTask<Double>() {
+    @Override
+    protected Double compute() {
+    return grades.entrySet().parallelStream().mapToDouble(entry -> {
+     course course = entry.getKey();
+    double grade = entry.getValue();
+    double credits = course.getCredits();
+    return grade * credits; // Calculate grade points for each course
+    }).sum();   } };
+    
+    double totalCredits = grades.entrySet().stream().mapToDouble(entry -> entry.getKey().getCredits()).sum();
+            
+    if (totalCredits == 0) {return 0.0;}
+        
+    double d= forkJoinPool.invoke(task) / totalCredits; 
+    student.setGpa(d);
+    return d;
+ } 
+    }
+
 
     public String generateAcademicReport(student student) {
-        Optional<student> stu=students.stream().filter(s -> s.getId() == student.getId()).findFirst();
-       double overallGPA= stu.get().getGpa();
-        if (overallGPA >= 3.8) {
-        return "Highest Honours";
-        } else if (overallGPA >= 3.5) {
-        return "Honours";
-        } else if (overallGPA >= 2.0) {
-        return "Good Standing";
+        
+    
+        if (student != null) {
+            double overallGPA = student.getGpa();
+    
+            if (overallGPA >= 3.8) {
+                return "Highest Honours";
+            } else if (overallGPA >= 3.5) {
+                return "Honours";
+            } else if (overallGPA >= 2.0) {
+                return "Good Standing";
+            } else {
+                return "Probation";
+            }
         } else {
-        return "Probation";
+            // Handle the case where the student is not found
+            return "Student not found";
         }
     }
+    
+    
 }

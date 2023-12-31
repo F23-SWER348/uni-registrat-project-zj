@@ -1,12 +1,14 @@
 package com.joelle;
 
-import java.time.DayOfWeek;
 import java.time.LocalDate;
-import java.time.LocalTime;
-import java.time.Month;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+
+// import java.time.DayOfWeek;
+// import java.time.LocalDate;
+// import java.time.LocalTime;
+// import java.time.Month;
+// import java.util.ArrayList;
+// import java.util.Arrays;
+// import java.util.List;
 
 /**
  * Hello world!
@@ -15,35 +17,32 @@ import java.util.List;
 public class App 
 {
     public static void main(String[] args) {
-    // Create an instance of Registrar
-    rigstrar registrar = new rigstrar();
 
-    // Create a schedule
-    schedule schedule1 = registrar.createSchedule(
-            List.of(DayOfWeek.MONDAY), // List of weekdays for the first schedule
-            LocalTime.of(9, 0), // Start time
-            LocalTime.of(11, 0) // End time
-
-    );
-    
+rigstrar registrar = new rigstrar();
 
     // Create a faculty
-    faculty faculty1 = registrar.createFaculty(1, "Faculty of Science", "Contact details", "Role");
-
-    // Create a course
-    course course1 = registrar.createCourse(
-            1, // Course number
-            "Course Name", // Course name
-            faculty1, // Faculty
-            3, // Number of credits
-            new ArrayList<>(), // Enrolled students
-            schedule1 // Created schedule
-          
-    );
-    
+    faculty f = registrar.createFaculty(1, null, null, null);
+    // Create a semester
+    semester s = registrar.createSemester(0, null, null, null);
+    // Create two courses
+    course c1 = registrar.createCourse(2, null, f, 3, null, s);
+    course c2 = registrar.createCourse(1, null, f, 2, null, s);
 
     // Create a student
-   
+    student student = registrar.createStudent(1, null, null, f, null, null);
+    // Enter grades for the courses
+    registrar.enterGrades(student, c1, 3.0);
+    registrar.enterGrades(student, c2, 3.5);
 
-    }}
+    // Calculate GPA (assuming this method is correctly implemented)
+    double gpa = registrar.calculateGPA(student);
+
+    System.out.println(gpa);
+System.out.println(registrar.generateAcademicReport(student));
+
+
+
+        
+    }
+}
     

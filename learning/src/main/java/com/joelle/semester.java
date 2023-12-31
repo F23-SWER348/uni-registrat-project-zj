@@ -1,44 +1,38 @@
 package com.joelle;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 
 public class semester {
    private int semesterID;
     private LocalDate startDate;
     private LocalDate endDate;
-    String contactsemesterDetails;
-
-
-   
-public String getContactsemesterDetails() {
-        return contactsemesterDetails;
-    }
-String name;
-    public semester(int semesterID, String name,LocalDate startDate, LocalDate endDate,String contactsemesterDetails) {
+    String name;
+    private ArrayList<course> coursesinsemester;
+    public semester(int semesterID, String name,LocalDate startDate, LocalDate endDate) {
         this.semesterID = semesterID;
         this.startDate = startDate;
         this.endDate = endDate;
         this.name=name;
-        this.contactsemesterDetails=contactsemesterDetails;
     }
 
-    public void setSemesterID(int semesterID) {
+    public synchronized void setSemesterID(int semesterID) {
         this.semesterID = semesterID;
     }
 
-    public void setStartDate(LocalDate startDate) {
+    public synchronized void setStartDate(LocalDate startDate) {
         this.startDate = startDate;
     }
 
-    public void setEndDate(LocalDate endDate) {
+    public synchronized void setEndDate(LocalDate endDate) {
         this.endDate = endDate;
     }
 
-    public String getName() {
+    public synchronized String getName() {
         return name;
     }
 
-    public void setName(String name) {
+    public synchronized void setName(String name) {
         this.name = name;
     }
 
@@ -53,9 +47,14 @@ String name;
     public LocalDate getEndDate() {
         return endDate;
     }
-    public String contactsemesterDetails() {
-       
-        throw new UnsupportedOperationException("Unimplemented method 'getContactDetails'");
+
+    public ArrayList<course> getCoursesinsemester() {
+        return coursesinsemester;
     }
+
+    public void setCoursesinsemester(ArrayList<course> coursesinsemester) {
+        this.coursesinsemester = coursesinsemester;
+    }
+
 }  
 

@@ -23,7 +23,7 @@ public class schedule {
     public List<DayOfWeek> getStudyDays() {
         return studyDays;
     }
-    public void addStudents(List<student> students) {
+    public synchronized void addStudents(List<student> students) {
         studentsEnrolled.addAll(students);
     }
 

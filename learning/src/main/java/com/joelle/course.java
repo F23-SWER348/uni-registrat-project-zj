@@ -10,33 +10,35 @@ public class course {
     private List<student> studentsEnrolled =new ArrayList<>();
     private int credits;
     schedule schedule ;
+ArrayList<course> prerequisites ;
+semester semester;
+staff staff;
+public staff getStaff() {
+    return staff;
+}
+
+public void setStaff(staff staff) {
+    this.staff = staff;
+}
+
 public schedule getSchedule() {
         return schedule;
     }
 
+    public semester getSemester() {
+    return semester;
+}
 
-    public void setSchedule(schedule schedule) {
+public void setSemester(semester semester) {
+    this.semester = semester;
+}
+
+    public synchronized void setSchedule(schedule schedule) {
         this.schedule = schedule;
     }
-ArrayList<course> prerequisites ;
 public String getName() {
     return name;
 }
-private schedule courseSchedule;
-
-    public void setCourseSchedule(schedule courseSchedule) {
-    this.courseSchedule = courseSchedule;
-}
-
-
-    public course(schedule courseSchedule) {
-        this.courseSchedule = courseSchedule;
-    }
-
-    public schedule getCourseSchedule() {
-        return courseSchedule;
-    }
-
 
 public List<student> getStudentsEnrolled() {
     return studentsEnrolled;
@@ -44,34 +46,24 @@ public List<student> getStudentsEnrolled() {
 public ArrayList<course> getPrerequisites() {
     return prerequisites;
 }
-public void setPrerequisites(ArrayList<course> prerequisites) {
+public synchronized void setPrerequisites(ArrayList<course> prerequisites) {
     this.prerequisites = prerequisites;
 }
-ArrayList<semester> meetingSemesters;
 
+     public void addStudent(student student) {
+        studentsEnrolled.add(student);
+    }
 
-    
-    public List<semester> getMeetingSemesters() {
-    return meetingSemesters;
-}
-public course(int courseID, String name, faculty faculty, int credits,List<student> studentsEnrolled, schedule schedule) { 
+public course(int courseID, String name, faculty faculty, int credits,schedule schedule,semester semester) { 
     this.courseID = courseID;
     this.name = name;
     this.faculty = faculty;
     this.credits = credits;
-    this.studentsEnrolled = studentsEnrolled;
     this.schedule= schedule;
-    // Initialize the lists
-   
+    this.semester= semester;
 }
-   
     
-
-    public void addStudent(student student) {
-        studentsEnrolled.add(student);
-    }
-
-    public void removeStudent(student student) {
+    public synchronized void removeStudent(student student) {
         studentsEnrolled.remove(student);
     }
 
@@ -83,13 +75,6 @@ public course(int courseID, String name, faculty faculty, int credits,List<stude
     public String getCourseName() {
         return name;
     }
-  
-  
-
-  
-   
-   // Constructor and other methods...
-
    
    public faculty getFaculty() {
         return faculty;
@@ -97,8 +82,5 @@ public course(int courseID, String name, faculty faculty, int credits,List<stude
 
     public int getCredits() {
         return credits;
-    }
-   
-
-   
+    } 
 }
