@@ -1,13 +1,19 @@
 package com.joelle;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 
+import java.io.BufferedReader;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.time.DayOfWeek;
 import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -91,16 +97,17 @@ student student = registrar.createStudent(1, null, null, f, null, null);
     public void testReadCourseFile() {
         String filePath = "src/test/resources/course.txt"; // File path
 
-        List<String> linesList;
+        List<String> linesList = new ArrayList<>();
 
-        try (Stream<String> stream = Files.lines(Paths.get(filePath))) {
-            linesList = stream.collect(Collectors.toList());
-        } catch (IOException e) {
-            e.printStackTrace();
-            // Fail the test with a meaningful error message
-         
-            return; // This might be redundant, added for clarity
+        try (BufferedReader reader = Files.newBufferedReader(Paths.get(filePath))) {
+        String line;
+        while ((line = reader.readLine()) != null) {
+            linesList.add(line);
         }
+    } catch (IOException e) {
+        e.printStackTrace();
+        return;
+    }
 
         // Now you have a linesList containing all lines from the file
         // You can perform any operations you want here, for example, printing the lines:
@@ -111,121 +118,236 @@ student student = registrar.createStudent(1, null, null, f, null, null);
          assertEquals("File contains the expected number of lines", expectedLineCount, linesList.size());
     }
     @Test
-    public void testReadFacultyFile() {
-        String filePath = "src/test/resources/faculty.txt"; // File path
+public void testReadFacultyFile() {
+    String filePath = "src/test/resources/faculty.txt"; // File path
 
-        List<String> linesList;
+    List<String> linesList = new ArrayList<>();
 
-        try (Stream<String> stream = Files.lines(Paths.get(filePath))) {
-            linesList = stream.collect(Collectors.toList());
-        } catch (IOException e) {
-            e.printStackTrace();
-            // Fail the test with a meaningful error message
-        
-            return; // This might be redundant, added for clarity
+    try (BufferedReader reader = Files.newBufferedReader(Paths.get(filePath))) {
+        String line;
+        while ((line = reader.readLine()) != null) {
+            linesList.add(line);
         }
-
-        // Now you have a linesList containing all lines from the file
-        // You can perform any operations you want here, for example, printing the lines:
-        linesList.forEach(System.out::println);
-
-        // Check if all lines were read
-        long expectedLineCount = 15; // Set this to the expected number of lines in the file
-         assertEquals("File contains the expected number of lines", expectedLineCount, linesList.size());
-    }
-    @Test
-    public void testReadScheduleFile() {
-        String filePath = "src/test/resources/.txt"; // File path
-
-        List<String> linesList;
-
-        try (Stream<String> stream = Files.lines(Paths.get(filePath))) {
-            linesList = stream.collect(Collectors.toList());
-        } catch (IOException e) {
-            e.printStackTrace();
-            // Fail the test with a meaningful error message
-        
-            return; // This might be redundant, added for clarity
-        }
-
-        // Now you have a linesList containing all lines from the file
-        // You can perform any operations you want here, for example, printing the lines:
-        linesList.forEach(System.out::println);
-
-        // Check if all lines were read
-        long expectedLineCount = 15; // Set this to the expected number of lines in the file
-         assertEquals("File contains the expected number of lines", expectedLineCount, linesList.size());
+    } catch (IOException e) {
+        e.printStackTrace();
+        return;
     }
 
+    // List to store faculty members
+    List<faculty> facultyList = new ArrayList<>();
+
+    // Now you have a linesList containing all lines from the file
+    linesList.forEach(line -> {
+        // Split the line by comma or any other delimiter if needed
+        String[] values = line.split(",");
+
+        // Extract values and create a faculty object
+        int facultyID = Integer.parseInt(values[0]);
+        String name = values[1];
+        String email = values[2];
+        String phoneNumber = values[3];
+
+        // Create a faculty object
+        faculty faculty = new faculty(facultyID, name, email, phoneNumber);
+
+        // Add the faculty object to the facultyList
+        facultyList.add(faculty);
+
+        // Perform necessary assertions here or use the facultyList in other tests
+        assertNotNull(faculty);
+    });
+
+    // Check if all lines were read
+    long expectedLineCount = 15; // Set this to the expected number of lines in the file
+    assertEquals("File contains the expected number of lines", expectedLineCount, linesList.size());
+}
+   @Test
+public void testReadScheduleFile() {
+    String filePath = "src/test/resources/schedule.txt"; // File path
+
+    List<String> linesList = new ArrayList<>();
+
+    try (BufferedReader reader = Files.newBufferedReader(Paths.get(filePath))) {
+        String line;
+        while ((line = reader.readLine()) != null) {
+            linesList.add(line);
+        }
+    } catch (IOException e) {
+        e.printStackTrace();
+        return;
+    }
+
+    // List to store schedules
+    List<schedule> scheduleList = new ArrayList<>();
+
+    // Now you have a linesList containing all lines from the file
+    linesList.forEach(line -> {
+        // Split the line by comma or any other delimiter if needed
+        String[] values = line.split(",");
+
+        // Extract values and create studyDays list
+        List<DayOfWeek> studyDays = Arrays.stream(Arrays.copyOfRange(values, 0, values.length - 2))
+                .map(DayOfWeek::valueOf)
+                .collect(Collectors.toList());
+
+        // Extract start time and end time
+        LocalTime startTime = LocalTime.parse(values[values.length - 2]);
+        LocalTime endTime = LocalTime.parse(values[values.length - 1]);
+
+        // Create a schedule object
+        schedule schedule = new schedule(studyDays, startTime, endTime);
+
+        // Add the schedule object to the scheduleList
+        scheduleList.add(schedule);
+
+        // Perform necessary assertions here or use the scheduleList in other tests
+        assertNotNull(schedule);
+    });
+
+    // Check if all lines were read
+    long expectedLineCount = 15; // Set this to the expected number of lines in the file
+    assertEquals("File contains the expected number of lines", expectedLineCount, linesList.size());
+}
     @Test
     public void testReadSemesterFile() {
         String filePath = "src/test/resources/semester.txt"; // File path
-
-        List<String> linesList;
-
-        try (Stream<String> stream = Files.lines(Paths.get(filePath))) {
-            linesList = stream.collect(Collectors.toList());
+    
+        List<String> linesList = new ArrayList<>();
+    
+        try (BufferedReader reader = Files.newBufferedReader(Paths.get(filePath))) {
+            String line;
+            while ((line = reader.readLine()) != null) {
+                linesList.add(line);
+            }
         } catch (IOException e) {
             e.printStackTrace();
-            // Fail the test with a meaningful error message
-        
-            return; // This might be redundant, added for clarity
+            return;
         }
-
+    
+        // List to store semesters
+        List<semester> semesterList = new ArrayList<>();
+    
         // Now you have a linesList containing all lines from the file
-        // You can perform any operations you want here, for example, printing the lines:
-        linesList.forEach(System.out::println);
-
+        linesList.forEach(line -> {
+            // Split the line by comma or any other delimiter if needed
+            String[] values = line.split(",");
+    
+            // Extract values and create a semester object
+            int semesterID = Integer.parseInt(values[0]);
+            String name = values[1];
+            LocalDate startDate = LocalDate.parse(values[2]); // Assuming the date format is ISO_LOCAL_DATE (YYYY-MM-DD)
+            LocalDate endDate = LocalDate.parse(values[3]);
+    
+            // Create a semester object
+            semester semester = new semester(semesterID, name, startDate, endDate);
+    
+            // Add the semester object to the semesterList
+            semesterList.add(semester);
+    
+            // Perform necessary assertions here or use the semesterList in other tests
+            assertNotNull(semester);
+        });
+    
         // Check if all lines were read
         long expectedLineCount = 15; // Set this to the expected number of lines in the file
-         assertEquals("File contains the expected number of lines", expectedLineCount, linesList.size());
+        assertEquals("File contains the expected number of lines", expectedLineCount, linesList.size());
     }
     @Test
     public void testReadStaffFile() {
         String filePath = "src/test/resources/staff.txt"; // File path
-
-        List<String> linesList;
-
-        try (Stream<String> stream = Files.lines(Paths.get(filePath))) {
-            linesList = stream.collect(Collectors.toList());
+    
+        List<String> linesList = new ArrayList<>();
+    
+        try (BufferedReader reader = Files.newBufferedReader(Paths.get(filePath))) {
+            String line;
+            while ((line = reader.readLine()) != null) {
+                linesList.add(line);
+            }
         } catch (IOException e) {
             e.printStackTrace();
-            // Fail the test with a meaningful error message
-        
-            return; // This might be redundant, added for clarity
+            return;
         }
-
+    
+        // List to store staff members
+        List<staff> staffList = new ArrayList<>();
+    
         // Now you have a linesList containing all lines from the file
-        // You can perform any operations you want here, for example, printing the lines:
-        linesList.forEach(System.out::println);
-
+        linesList.forEach(line -> {
+            // Split the line by comma
+            String[] values = line.split(",");
+    
+            // Extract values and create a staff object
+            String staffID = values[0];
+            String name = values[1];
+            String email = values[2];
+            String phoneNumber = values[3];
+    
+            // Create a staff object
+            staff staff = new staff(staffID, name, email, phoneNumber);
+    
+            // Add the staff object to the staffList
+            staffList.add(staff);
+    
+            // Perform necessary assertions here or use the staffList in other tests
+            assertNotNull(staff);
+        });
+    
         // Check if all lines were read
         long expectedLineCount = 15; // Set this to the expected number of lines in the file
-         assertEquals("File contains the expected number of lines", expectedLineCount, linesList.size());
+        assertEquals("File contains the expected number of lines", expectedLineCount, linesList.size());
     }
     @Test
-    public void testReadStudentFile() {
-        String filePath = "src/test/resources/student.txt"; // File path
+public void testReadStudentFile() {
+String filePath = "src/test/resources/student.txt"; // File path
 
-        List<String> linesList;
+List<String> linesList = new ArrayList<>();
 
-        try (Stream<String> stream = Files.lines(Paths.get(filePath))) {
-            linesList = stream.collect(Collectors.toList());
-        } catch (IOException e) {
-            e.printStackTrace();
-            // Fail the test with a meaningful error message
-        
-            return; // This might be redundant, added for clarity
-        }
+try (BufferedReader reader = Files.newBufferedReader(Paths.get(filePath))) {
+String line;
+while ((line = reader.readLine()) != null) {
+linesList.add(line);
+}
+} catch (IOException e) {
+e.printStackTrace();
 
-        // Now you have a linesList containing all lines from the file
-        // You can perform any operations you want here, for example, printing the lines:
-        linesList.forEach(System.out::println);
+return;
+}
 
-        // Check if all lines were read
-        long expectedLineCount = 15; // Set this to the expected number of lines in the file
-         assertEquals("File contains the expected number of lines", expectedLineCount, linesList.size());
-    }
+// Now you have a linesList containing all lines from the file
+// You can perform any operations you want here, for example, printing the lines:
+linesList.forEach(line -> {
+// Split the line by comma
+String[] values = line.split(",");
+
+// Extract values and create a student object
+int id = Integer.parseInt(values[0]);
+String name = values[1];
+String major = values[2];
+// Assuming you have a method to create a faculty object from a string (implementation needed)
+faculty faculty = createFacultyFromString(values[3]);
+String email = values[4];
+String phoneNumber = values[5];
+
+// Create a student object
+student student = new student(id, name, major, faculty, email, phoneNumber);
+
+// Now you can perform assertions or store the student object for further testing
+assertNotNull(student);
+});
+
+// Check if all lines were read
+long expectedLineCount = 15; // Set this to the expected number of lines in the file
+assertEquals("File contains the expected number of lines", expectedLineCount, linesList.size());
+}
+
+// Method to create a faculty object from a string (you need to implement this based on your faculty class)
+private faculty createFacultyFromString(String facultyString) {
+// Implement this based on your faculty class
+return null;
+}
+
+
+
 }
 
 
