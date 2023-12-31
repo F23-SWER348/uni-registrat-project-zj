@@ -135,7 +135,7 @@ student student = registrar.createStudent(1, null, null, f, null, null);
     }
     @Test
     public void testReadScheduleFile() {
-        String filePath = "src/test/resources/schedule.txt"; // File path
+        String filePath = "src/test/resources/.txt"; // File path
 
         List<String> linesList;
 

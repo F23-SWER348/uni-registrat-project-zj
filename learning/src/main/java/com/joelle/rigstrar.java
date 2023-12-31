@@ -216,6 +216,7 @@ public class rigstrar {
             System.out.println("Invalid input: Student or course provided is null.");
         }
     
+        
         List<course> studentCourses = student.getCompletedCourses() ;// Assuming this method exists to get student's enrolled courses
     
         boolean conflictExists = studentCourses.stream()
