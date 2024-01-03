@@ -1,0 +1,5 @@
+1,Engineering,eng_dept@example.com,123-456-7890,Head
+2,Science,science_dept@example.com,987-654-3210,Professor
+3,Arts,arts_dept@example.com,555-123-4567,Coordinator
+4,Business,business_dept@example.com,111-222-3333,Manager
+5,Medical,medical_dept@example.com,444-555-6666,Director

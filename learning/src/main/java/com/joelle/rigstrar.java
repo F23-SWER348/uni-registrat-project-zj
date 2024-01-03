@@ -17,14 +17,14 @@ import java.util.stream.Collectors;
 
 public class rigstrar {
 
-    private ArrayList<student> students;
-    private ArrayList<faculty> facultys;
-    private ArrayList<semester> semesters;
-     private ArrayList<schedule>schedules;
+    public ArrayList<student> students;
+   public ArrayList<faculty> facultys;
+    public ArrayList<semester> semesters;
+     public ArrayList<schedule>schedules;
     
-    private ArrayList<course> courses;
-        private ArrayList<staff> staffs;
-    private final Lock lock = new ReentrantLock();
+   public ArrayList<course> courses;
+        public ArrayList<staff> staffs;
+   public final Lock lock = new ReentrantLock();
 
 
     public rigstrar() {
