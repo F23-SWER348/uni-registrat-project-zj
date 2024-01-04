@@ -24,25 +24,25 @@ public class readinggg {
   
            rr.readFaculty();
            //ss
-          System.out.println(rr.facultyList.size());
-       System.out.println(r.getFacultys().size());
+          System.out.println( "faculty list: "+rr.facultyList.size());
+       System.out.println("faculty list from rigestrar class: "+r.getFacultys().size());
           rr.ReadScheduleFile();
-          System.out.println(rr.scheduleList.size());
-       System.out.println(r.getSchedules().size());
+          System.out.println("scheduale list: "+rr.scheduleList.size());
+       System.out.println("scheduale list from rigestrar class: "+r.getSchedules().size());
    
      rr.ReadSemesterFile();
-          System.out.println(rr.semesterList.size());
-       System.out.println(r.getSemesters().size());
+          System.out.println("semester list: "+rr.semesterList.size());
+       System.out.println("semester list from rigestrar class: "+r.getSemesters().size());
     rr.ReadStaffFile();
-          System.out.println(rr.staffList.size());
-       System.out.println(r.getStaffs().size());
+          System.out.println("staff list from rigestrar class: "+rr.staffList.size());
+       System.out.println("staff list from rigestrar class: "+r.getStaffs().size());
    rr.readStudent();
-          System.out.println(rr.studentList.size());
-       System.out.println(r.getStudents().size());
+          System.out.println("student list from rigestrar class: "+rr.studentList.size());
+       System.out.println("student list from rigestrar class: "+r.getStudents().size());
 System.out.println("the name of the faculty of the first student in the text file: "+r.students.get(0).getFaculty().getName());
  rr.rrreadCourse();
-    System.out.println(rr.courseList.size());
-       System.out.println(r.getCourses().size());
+    System.out.println("course list from rigestrar class: "+rr.courseList.size());
+       System.out.println("course list from rigestrar class: "+r.getCourses().size());
 
 }
     
