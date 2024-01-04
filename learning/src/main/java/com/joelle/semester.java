@@ -2,6 +2,7 @@ package com.joelle;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.List;
 
 public class semester {
    private int semesterID;
@@ -14,6 +15,7 @@ public class semester {
         this.startDate = startDate;
         this.endDate = endDate;
         this.name=name;
+        this.coursesinsemester=new ArrayList<course>();
     }
 
     public synchronized void setSemesterID(int semesterID) {

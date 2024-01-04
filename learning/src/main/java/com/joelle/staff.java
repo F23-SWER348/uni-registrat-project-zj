@@ -20,7 +20,7 @@ import java.util.stream.Collectors;
             this.name = name;
             this.phoneNumber = phoneNumber;
             this.email = email;
-
+            this.givescourse = new ArrayList<>();
 
         }
     public ArrayList<course> getGivescourse() {

@@ -1,17 +1,20 @@
 package com.joelle;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
 import java.io.BufferedReader;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.PrintStream;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.time.DayOfWeek;
@@ -31,230 +34,255 @@ import org.junit.Test;
  * Unit test for simple App.
  */
 public class AppTest {
-    private ArrayList<faculty> facultyList;
- private ArrayList<semester> semesterList; 
-private ArrayList<course> courseList; 
-private ArrayList<staff> staffList;
- private ArrayList<student> studentList; 
-  private ArrayList<schedule> scheduleList; 
+    
+//  readddd read = new readddd();
+   public  rigstrar r =new rigstrar();
+     public student testStudent;
+     public course testCourse1, testCourse2,prerequisiteCourse,targetCourse;
+          public schedule schedule1, schedule2;
 
- rigstrar r = new rigstrar();
+     public staff testStaff;
+     public semester testSemester;
+          public faculty testFaculty;
+
+//     ArrayList<faculty> fArrayList = read.getFacultyList();
+//     ArrayList<schedule> scheduleList = read.getScheduleList();
 
 @Before
-    public void setUp() {
-       
-readFaculty();
-ReadScheduleFile();
-ReadSemesterFile();
-ReadStaffFile();
-readStudent();
-courseList = new ArrayList<>();
-System.out.println("Faculty List Size: " + facultyList.size());
-    System.out.println("Schedule List Size: " + scheduleList.size());
-    System.out.println("Semester List Size: " + semesterList.size());
-    System.out.println("Staff List Size: " + staffList.size());
-    System.out.println("Student List Size: " + studentList.size());
-        DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern("h:mm a");
-String filePath = "src/test/resources/course.txt"; // File path
-        try (BufferedReader reader = new BufferedReader(new FileReader(filePath))) {
-            String line;
-            while ((line = reader.readLine()) != null) {
-                String[] parts = line.split(",");
-                int courseID = Integer.parseInt(parts[0].trim());
-                String name = parts[1].trim();
-                String facname = parts[2].trim();
-                int credits = Integer.parseInt(parts[3].trim());
-                String[] scheduleParts = parts[4].trim().split(" ");
-                DayOfWeek day = DayOfWeek.valueOf(scheduleParts[0].toUpperCase());
-                LocalTime startTime = LocalTime.parse(scheduleParts[1] + " " + scheduleParts[2], timeFormatter);
-                LocalTime endTime = LocalTime.parse(scheduleParts[4] + " " + scheduleParts[5], timeFormatter);
-                String semester = parts[5].trim();
+public void setUp() {
+    r = new rigstrar();  
+      testFaculty = new faculty(101, "Dr. Smith", "drsmith@example.com", "9876543210");  // Add a faculty member
 
-                schedule scheduleObj = new schedule(Arrays.asList(day), startTime, endTime);
-                int facultyIndex = 0;
-                    for (int i = 0; i < facultyList.size(); i++) {
-                        if (facultyList.get(i).getName().equals(facname)) {
-                            facultyIndex = i;
-                        }
-                    }
-                      int semesterindex = 0;
-                      ArrayList<semester> semster=new ArrayList<>();
-                    for (int i = 0; i < semesterList.size(); i++) {
-                        if (semesterList.get(i).getName().equals(semester)) {
-                            semesterindex = i;
-                            semster.add(semesterList.get(i));
-                        }
-                    }
-                
-                course course = new course(courseID, name,facultyList.get(facultyIndex), credits, scheduleObj, semster.get(semesterindex));
-                courseList.add(course);
-                r.courses.add(course);
-                System.out.println(courseList);
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+    testStudent = new student(1, "Alice", "Computer Science", testFaculty, "alice@example.com", "1234567890");
+    testStaff = new staff("S001", "John Doe", "1234567890", "johndoe@example.com");
+    testSemester = new semester(1, "Spring 2024", LocalDate.now(), LocalDate.now().plusMonths(4));
 
+    schedule schedule1 = new schedule(1,Arrays.asList(DayOfWeek.MONDAY), LocalTime.of(9, 0), LocalTime.of(10, 0));
+    schedule schedule2 = new schedule(2,Arrays.asList(DayOfWeek.MONDAY), LocalTime.of(9, 30), LocalTime.of(10, 30));
+
+    testCourse1 = new course(101, "Intro to Programming", null, 3, schedule1, testSemester);
+    testCourse2 = new course(102, "Advanced Programming", null, 3, schedule2, testSemester);
+
+
+  
+
+}
+@Test
+public void testcalculategpa() {
+    // Create an instance of the Registrar class
+    rigstrar registrar = new rigstrar();
+
+    // Create a faculty
+    faculty f = new faculty(1, "John Faculty", "faculty@university.com", null);
+
+    // Create a semester
+    semester s = new semester(1, null, LocalDate.now(), LocalDate.now().plusMonths(4));
+
+    // Create two courses
+    course c1 = new course(1, "Course 1", f, 3, null, s);
+    course c2 = new course(2, "Course 2", f, 2, null, s);
+
+    // Create a student
+    student student = new student(1, "John", "Software Engineering", f, "john@example.com", "1234-5678-9101");
+
+    // Enter grades for the courses
+    registrar.enterGrades(student, c1, 3.0);
+    registrar.enterGrades(student, c2, 3.5);
+
+    // Calculate GPA (assuming this method is correctly implemented)
+    double gpa = registrar.calculateGPA(student);
+    // Assert the expected result based on the calculated GPA
+    assertEquals(3.2, gpa, 0.01);
+}
+ @Test
+public void testgenerateacademicreport() {
+    // Create an instance of the Registrar class
+    rigstrar registrar = new rigstrar();
+
+  // Create an instance of the Registrar class
+
+// Create a faculty
+faculty f = registrar.createFaculty(1, "John Faculty", "faculty@university.com", "Computer Science");
+
+// Create a semester
+semester s = registrar.createSemester(1, "fall",LocalDate.now(), LocalDate.now().plusMonths(4));
+
+// Create two courses
+course c1 = registrar.createCourse(1, "Course 1", f, 3,null, s);
+course c2 = registrar.createCourse(2, "Course 2", f, 2,null, s);
+
+// Note: The above assumes that createFaculty, createSemester, and createCourse methods are implemented in the Registrar class.
+
+
+    // Create a student
+student student = registrar.createStudent(1, null, null, f, null, null);
+    // Enter grades for the courses
+    registrar.enterGrades(student, c1, 3.0);
+    registrar.enterGrades(student, c2, 3.5);
+
+    // Calculate GPA (assuming this method is correctly implemented)
+    double gpa = registrar.calculateGPA(student);
+    String res = registrar.generateAcademicReport(student);
+    // Assert the expected result based on the calculated GPA
+    assertEquals("Good Standing", res);
+}
+ @Test
+    public void testBrowseCourses() {
+        // Set up the test data
+        List<DayOfWeek> studyDays = Arrays.asList(DayOfWeek.MONDAY, DayOfWeek.WEDNESDAY);
+        LocalTime startTime = LocalTime.of(9, 0);
+        LocalTime endTime = LocalTime.of(10, 30);
+        schedule schedule = new schedule(1,studyDays, startTime, endTime);
+        faculty faculty = new faculty(1, "Test Faculty", "email@example.com", "1234567890");
+        course course = new course(101, "Test Course", faculty, 3, schedule, new semester(1, "Fall", LocalDate.now(), LocalDate.now().plusMonths(4)));
+
+        // Create an instance of rigstrar and add the course
+        rigstrar r = new rigstrar();
+        r.getCourses().add(course);
+
+        // Redirect System.out to capture the output
+        ByteArrayOutputStream outContent = new ByteArrayOutputStream();
+        System.setOut(new PrintStream(outContent));
+
+        // Call the method under test
+        r.browseCourses();
+
+        // Verify the output
+        String expectedOutput = "Course ID: 101\nCourse Name: Test Course\nFaculty: Test Faculty\nCredits: 3\n------------------------";
+        assertTrue(outContent.toString().contains(expectedOutput));
+
+        // Reset System.out
+        System.setOut(System.out);
     }
 
+    @Test
+  public  void testCreateStaff() {
+        staff newStaff = r.createstaff("S001", "John Doe", "1234567890", "johndoe@example.com");
+        assertNotNull(newStaff);
+        assertTrue(r.getStaffs().contains(newStaff));
+    }
+
+    @Test
+  public  void testCreateStudent() {
+        faculty testFaculty = new faculty(1, "Test Faculty", "1234567890", "faculty@example.com");
+        student newStudent = r.createStudent(1, "Alice Smith", "Computer Science", testFaculty, "alice@example.com", "0987654321");
+        assertNotNull(newStudent);
+        assertTrue(r.getStudents().contains(newStudent));
+    }
+
+    @Test
+  public  void testCreateFaculty() {
+        faculty newFaculty = r.createFaculty(2, "Bob Johnson", "2345678901", "bobj@example.com");
+        assertNotNull(newFaculty);
+        assertTrue(r.getFacultys().contains(newFaculty));
+    }
+
+    @Test
+   public void testCreateSemester() {
+        semester newSemester = r.createSemester(1, "Spring 2024", LocalDate.now(), LocalDate.now().plusMonths(4));
+        assertNotNull(newSemester);
+        assertTrue(r.getSemesters().contains(newSemester));
+    }
+
+    @Test
+  public  void testCreateSchedule() {
+        schedule newSchedule = r.createSchedule(3,Arrays.asList(DayOfWeek.MONDAY, DayOfWeek.WEDNESDAY), LocalTime.of(9, 0), LocalTime.of(10, 30));
+        assertNotNull(newSchedule);
+        assertTrue(r.getSchedules().contains(newSchedule));
+    }
+
+    @Test
+  public  void testCreateCourse() {
+        faculty testFaculty = new faculty(3, "Eve Adams", "3456789012", "evea@example.com");
+        semester testSemester = new semester(2, "Autumn 2024", LocalDate.now(), LocalDate.now().plusMonths(4));
+        schedule testSchedule = new schedule(3,Arrays.asList(DayOfWeek.TUESDAY, DayOfWeek.THURSDAY), LocalTime.of(11, 0), LocalTime.of(12, 30));
+        course newCourse = r.createCourse(101, "Intro to Programming", testFaculty, 4, testSchedule, testSemester);
+        assertNotNull(newCourse);
+        assertTrue(r.getCourses().contains(newCourse));
+    }
+
+    @Test
+ public   void testHasConflict() {
+        assertTrue(r.hasConflict(testCourse1, testCourse2));
+        schedule nonOverlappingSchedule = new schedule(1,Arrays.asList(DayOfWeek.TUESDAY), LocalTime.of(11, 0), LocalTime.of(12, 0));
+        course nonOverlappingCourse = new course(103, "Non Overlapping Course", null, 3, nonOverlappingSchedule, testSemester);
+        assertFalse(r.hasConflict(testCourse1, nonOverlappingCourse));
+    }
+ 
 
 
     @Test
-    public void shouldAnswerWithTrue(){
-        assertTrue( true );
+    public void testCheckPrerequisites() {
+        prerequisiteCourse = new course(101, "Intro to Programming", null, 3, schedule1, testSemester);
+        targetCourse = new course(102, "Advanced Programming", null, 3, schedule2, testSemester);
+    
+        // Adding prerequisiteCourse as a prerequisite for targetCourse
+        ArrayList<course> prerequisites = new ArrayList<>();
+        prerequisites.add(prerequisiteCourse);
+        targetCourse.setPrerequisites(prerequisites);
+    
+        // Assuming testStudent has completed the prerequisiteCourse
+        ArrayList<course> completedCourses = new ArrayList<>();
+        completedCourses.add(prerequisiteCourse);
+        testStudent.setCompletedCourses(completedCourses);
+    
+        // Debugging information
+        System.out.println("Completed Courses: " + testStudent.getCompletedCourses().stream().map(course::getCourseName).collect(Collectors.toList()));
+        System.out.println("Prerequisites for targetCourse: " + targetCourse.getPrerequisites().stream().map(course::getCourseName).collect(Collectors.toList()));
+    
+        // Check if prerequisites are met for targetCourse by testStudent
+        assertTrue(r.checkPrerequisites(targetCourse, testStudent));
+    }
+
+@Test
+public void testViewPrerequisites() {
+    ArrayList<course> prerequisites = new ArrayList<>(Arrays.asList(testCourse2)); // Corrected line
+    testCourse1.setPrerequisites(prerequisites);
+    String output = r.viewPrerequisites(testCourse1);
+    // Verify output
+    assertTrue(output.contains("Prerequisites for " + testCourse1.getCourseName() + ":"));
+    assertTrue(output.contains(testCourse2.getCourseName()));
+}
+
+    @Test
+  public  void testRegisterStudentForCourse() {
+        r.registerStudentForCourse(testStudent, testCourse1);
+        // Check if student is registered for the course
+        assertTrue(testStudent.getCompletedCourses().contains(testCourse1));
+    }
+    @Test
+public void testAddCourseToStaff() {
+    // Ensure testStaff and testCourse1 are initialized properly
+    staff testStaff = new staff("StaffID", "StaffName", "StaffEmail", "StaffPhone");
+    course testCourse1 = new course(1, "uidhf", testFaculty, 3, schedule1, testSemester);
+
+    r.addCourseToStaff(testStaff, testCourse1);
+
+    // Verify staff teaches the course
+    assertTrue(testStaff.getGivescourse().contains(testCourse1));
+}
+
+    @Test
+    public void testCoursesInSemester() {
+        // Add testCourse1 to the courses list in 'r' if not already added
+        r.getCourses().add(testCourse1);
+    
+        List<course> coursesInTestSemester = r.coursesInSemester(testSemester);
+    
+        // Debugging: Check if courses list in 'r' contains testCourse1
+        System.out.println("Courses in 'r': " + r.getCourses());
+        System.out.println("Courses in Test Semester: " + coursesInTestSemester);
+    
+        // Check if the returned list contains testCourse1
+        assertTrue(coursesInTestSemester.contains(testCourse1));
+    }
+
+    @Test
+  public  void testEnterGrades() {
+        r.enterGrades(testStudent, testCourse1, 2.0);
+        // Assuming there's a way to get grades from student for a course
+        assertEquals(2.0, testStudent.getGradeForCourse(testCourse1), 0.01);
     }
    
 
-    public void ReadScheduleFile() {
-        String filePath = "src/test/resources/schedule.txt"; // File path
-        scheduleList=new ArrayList<>();
-        try (BufferedReader reader = new BufferedReader(new FileReader(filePath))) {
-        String line;
-        while ((line = reader.readLine()) != null) {
-            String[] parts = line.split(",");
-            DayOfWeek day = DayOfWeek.valueOf(parts[1].trim().toUpperCase());
-            LocalTime startTime = LocalTime.parse(parts[2].trim());
-            LocalTime endTime = LocalTime.parse(parts[3].trim());
-
-            schedule schedule = new schedule(Arrays.asList(day), startTime, endTime);
-            scheduleList.add(schedule);
-            r.schedules.add(schedule);
-
-        }
-    } catch (FileNotFoundException e) {
-        System.err.println("File not found: " + filePath);
-        e.printStackTrace();
-    } catch (IOException e) {
-        e.printStackTrace();
-    }
-}
-
-
-
-public void readFaculty() {
-    facultyList = new ArrayList<>();
-    String filePath = "src/test/resources/faculty.txt"; // Adjusted path
-    try (BufferedReader reader = new BufferedReader(new FileReader(filePath))) {
-        System.out.println("Reading file from path: " + filePath);
-        String line;
-        while ((line = reader.readLine()) != null) {
-            System.out.println("Line read: " + line); // Print each line read for debugging
-            String[] data = line.split(",", 4); // Split by comma and limit the split to 4 parts
-            if (data.length >= 4) {
-                int facultyID = Integer.parseInt(data[0].trim());
-                String name = data[1].trim();
-                String email = data[2].trim();
-                String phoneNumber = data[3].trim();
-
-                faculty facultyMember = new faculty(facultyID, name, email, phoneNumber);
-                facultyList.add(facultyMember);
-                r.facultys.add(facultyMember);
-            }
-        }
-        System.out.println("Faculty List Size: " + facultyList.size());
-        for (faculty f : facultyList) {
-            System.out.println(f.getName());
-        }
-    } catch (FileNotFoundException e) {
-        System.err.println("File not found: " + filePath);
-        e.printStackTrace();
-    } catch (IOException e) {
-        System.err.println("Error reading file: " + filePath);
-        e.printStackTrace();
-    }
-}
-
-
-
-    public void ReadSemesterFile() {
-        String filePath = "src/test/resources/semester.txt"; // File path
-    
-              semesterList = new ArrayList<>();
-
-        try (BufferedReader reader = new BufferedReader(new FileReader(filePath))) {
-            String line;
-            while ((line = reader.readLine()) != null) {
-                String[] parts = line.split(",");
-                int semesterID = Integer.parseInt(parts[0].trim());
-                String name = parts[1].trim();
-                LocalDate startDate = LocalDate.parse(parts[2].trim());
-                LocalDate endDate = LocalDate.parse(parts[3].trim());
-
-                semester semester = new semester(semesterID, name, startDate, endDate);
-                semesterList.add(semester);    r.semesters.add(semester);
-
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        } }
-
-
-        public void ReadStaffFile() {
-            String filePath = "src/test/resources/staff.txt"; // File path
-            staffList = new ArrayList<>(); // You might need to remove this line if staffList is already initialized elsewhere
-    
-            try (BufferedReader reader = new BufferedReader(new FileReader(filePath))) {
-                String line;
-                while ((line = reader.readLine()) != null) {
-                    String[] parts = line.split(",");
-                    String staffID = parts[0].trim();
-                    String name = parts[1].trim();
-                    String email = parts[2].trim();
-                    String phoneNumber = parts[3].trim();
-    
-                    staff staff = new staff(staffID, name, email, phoneNumber);
-                    staffList.add(staff);
-                    
-    
-                }
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
-    
-
-        public void readStudent() {
-            studentList = new ArrayList<>();
-            try (InputStream is = getClass().getClassLoader().getResourceAsStream("student.txt")) {
-                BufferedReader reader = new BufferedReader(new InputStreamReader(is));
-                String line;
-                boolean firstLine = true; // To skip the header line
-                while ((line = reader.readLine()) != null) {
-                    if (firstLine) {
-                        firstLine = false;
-                        continue;
-                    }
-                    String[] data = line.split(",\\s*");
-                    if (data.length >= 6) {
-                        int id = Integer.parseInt(data[0].trim());
-                        String name = data[1].trim();
-                        String major = data[2].trim();
-                        String facName = data[3].trim();
-                        String email = data[4].trim();
-                        String phoneNumber = data[5].trim();
-                        
-                        int facultyIndex = -1; // Initialize with an invalid index
-                        for (int i = 0; i < facultyList.size(); i++) {
-                            if (facultyList.get(i).getName().equals(facName)) {
-                                facultyIndex = i;
-                                break; // Exit loop when faculty is found
-                            }
-                        }
-                        
-                        if (facultyIndex != -1) {
-                            student newStudent = new student(id, name, major,
-                                    facultyList.get(facultyIndex), email, phoneNumber);
-                            studentList.add(newStudent);
-                            r.students.add(newStudent);
-                        } else {
-                            // Handle case where faculty is not found for a student
-                            System.out.println("Faculty not found for student: " + name);
-                            // You might want to log this or perform another action based on your requirements
-                        }
-                    }
-                }
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
         }

@@ -13,16 +13,26 @@ public class schedule {
     private LocalTime startTime;
     private LocalTime endTime;
     private List<student> studentsEnrolled = new ArrayList<>();
-    
-    public schedule(List<DayOfWeek> studyDays, LocalTime startTime, LocalTime endTime) {
+   private int id;
+    public schedule(int id,List<DayOfWeek> studyDays, LocalTime startTime, LocalTime endTime) {
+        this.id = id;
         this.studyDays = studyDays;
         this.startTime = startTime;
         this.endTime = endTime;
+        this.studentsEnrolled = new ArrayList<>();
     }
 
     public List<DayOfWeek> getStudyDays() {
         return studyDays;
     }
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
     public synchronized void addStudents(List<student> students) {
         studentsEnrolled.addAll(students);
     }

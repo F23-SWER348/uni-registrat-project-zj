@@ -41,6 +41,8 @@ public class student implements user {
             this.faculty = faculty;
             this.email = email;
             this.phoneNumber = phoneNumber;
+            this.gradess = new HashMap<>();
+this.completedCourses=new ArrayList<>();
 
     }
 
@@ -60,11 +62,13 @@ public class student implements user {
     }
 
    
+  public Map<course, Double> getgradess() {
+        return this.gradess; 
+    }
 
 
-
-    public Map<course, Double> getGradess() {
-        return gradess;
+    public Double getGradeForCourse(course course) {
+        return gradess.get(course); // This will return the grade or null if the course is not found
     }
 
     public String getEmail() {
@@ -127,6 +131,9 @@ public long getId() {
     public UserRole getRole() {
         return UserRole.STUDENT;
     }
+        public void setCompletedCourses(ArrayList<course> completedCourses) {
+            this.completedCourses = completedCourses;
+        }
     
 }
     

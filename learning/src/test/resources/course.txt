@@ -1,5 +1,5 @@
-1,Introduction to Computer Science,Engineering,3,Monday 9:00 AM - 11:00 AM,Fall
-2,Electrical Circuits,Engineering,4,Wednesday 2:00 PM - 4:00 PM,Fall
-3,Modern Art History,Arts,3,Tuesday 10:30 AM - 12:30 PM,Fall
-4,Marketing Principles,Business,3,Thursday 1:00 PM - 3:00 PM,Fall
-5,Environmental Science,Science,4,Monday 1:30 PM - 3:30 PM,Sprin
+1,Introduction to Computer Science,Engineering,3,1,Fall
+2,Electrical Circuits,Engineering,4,2,Fall
+3,Modern Art History,Arts,3,1,Fall
+4,Marketing Principles,Business,3,4,Fall
+5,Environmental Science,Science,4,5,Spring

@@ -46,7 +46,7 @@ public List<student> getStudentsEnrolled() {
 public ArrayList<course> getPrerequisites() {
     return prerequisites;
 }
-public synchronized void setPrerequisites(ArrayList<course> prerequisites) {
+public synchronized  void setPrerequisites(ArrayList<course> prerequisites) {
     this.prerequisites = prerequisites;
 }
 
@@ -61,6 +61,7 @@ public course(int courseID, String name, faculty faculty, int credits,schedule s
     this.credits = credits;
     this.schedule= schedule;
     this.semester= semester;
+    this.studentsEnrolled =new ArrayList<>();
 }
     
     public synchronized void removeStudent(student student) {

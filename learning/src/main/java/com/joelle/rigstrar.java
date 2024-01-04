@@ -4,7 +4,6 @@ import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -17,6 +16,41 @@ import java.util.stream.Collectors;
 
 public class rigstrar {
 
+    public ArrayList<student> getStudents() {
+        return students;
+    }
+
+
+
+    public ArrayList<faculty> getFacultys() {
+        return facultys;
+    }
+
+
+
+    public ArrayList<semester> getSemesters() {
+        return semesters;
+    }
+
+
+
+    public ArrayList<schedule> getSchedules() {
+        return schedules;
+    }
+
+
+
+    public ArrayList<course> getCourses() {
+        return courses;
+    }
+
+
+
+    public ArrayList<staff> getStaffs() {
+        return staffs;
+    }
+
+
     public ArrayList<student> students;
    public ArrayList<faculty> facultys;
     public ArrayList<semester> semesters;
@@ -27,14 +61,14 @@ public class rigstrar {
    public final Lock lock = new ReentrantLock();
 
 
-    public rigstrar() {
-        // Initialize the lists in the constructor
-        this.students = new ArrayList<>();
-        this.facultys = new ArrayList<>();
-        this.semesters = new ArrayList<>();
-        this.courses = new ArrayList<>();
-         this.schedules = new ArrayList<>();
-    }
+   public rigstrar() {
+    this.students = new ArrayList<>();
+    this.facultys = new ArrayList<>();
+    this.semesters = new ArrayList<>();
+    this.courses = new ArrayList<>();
+    this.schedules = new ArrayList<>();
+    this.staffs = new ArrayList<>();
+}
 
    
 
@@ -92,8 +126,8 @@ public class rigstrar {
         return Semester;
 
     }
-    public schedule createSchedule(List<DayOfWeek> studyDays, LocalTime startTime, LocalTime endTime) {
-        schedule newSchedule = new schedule(studyDays, startTime, endTime);
+    public schedule createSchedule(int id ,List<DayOfWeek> studyDays, LocalTime startTime, LocalTime endTime) {
+        schedule newSchedule = new schedule(id,studyDays, startTime, endTime);
         if (this.schedules != null) {
             this.schedules.add(newSchedule); // Add the new schedule to the schedules list
         } else {
@@ -137,7 +171,7 @@ public class rigstrar {
 
        
 
-    private boolean hasConflict(course course1, course course2) {
+    public boolean hasConflict(course course1, course course2) {
         schedule schedule1 = course1.getSchedule();
         schedule schedule2 = course2.getSchedule();
 
@@ -150,7 +184,7 @@ public class rigstrar {
         return sameDay && timeOverlap;
     }
 
-    private boolean doSchedulesOverlap(schedule schedule1, schedule schedule2) {
+    public boolean doSchedulesOverlap(schedule schedule1, schedule schedule2) {
         if (schedule1 == null || schedule2 == null) {
             return false; // Handle cases where schedule1 or schedule2 is null
         }
@@ -176,66 +210,69 @@ public class rigstrar {
     
 
     
-        public void checkPrerequisites(course course, student student) {
-            List<course> completedCourses = student.getCompletedCourses();
-            Optional.ofNullable(course)
-                    .map(courseObj -> courseObj.getPrerequisites())
-                    .ifPresentOrElse(
-                            prerequisites -> {
-                                boolean allPrerequisitesTaken = prerequisites.stream().allMatch(completedCourses::contains);
-                                if (allPrerequisitesTaken) {
-                                    System.out.println("Student has taken all prerequisites for " + course.getCourseName());
-                                } else {
-                                    System.out.println("Student needs to take prerequisites first for " + course.getCourseName());
-                                }
-                            },
-                            () -> System.out.println("No prerequisites information available for " + course.getCourseName())
-                    );
-        
-      }
+    public boolean checkPrerequisites(course course, student student) {
+        if (course == null || student == null) return false;
+    
+        List<course> completedCourses = student.getCompletedCourses();
+        List<course> prerequisites = course.getPrerequisites();
+    
+        if (prerequisites == null || prerequisites.isEmpty()) return true; // No prerequisites
+    
+        return prerequisites.stream().allMatch(completedCourses::contains);
+    }
+    
 
-
-      public void viewPrerequisites(course course) {
+      public String viewPrerequisites(course course) {
+        StringBuilder output = new StringBuilder();
         Optional.ofNullable(course)
                 .map(courseObj -> courseObj.getPrerequisites())
                 .ifPresentOrElse(
                         prerequisites -> {
                             if (!prerequisites.isEmpty()) {
-                                System.out.println("Prerequisites for " + course.getCourseName() + ":");
-                                prerequisites.forEach(prereq -> System.out.println(prereq.getCourseName()));
+                                output.append("Prerequisites for ").append(course.getCourseName()).append(":").append("\n");
+                                prerequisites.forEach(prereq -> output.append(prereq.getCourseName()).append("\n"));
                             } else {
-                                System.out.println("No prerequisites for " + course.getCourseName());
+                                output.append("No prerequisites for ").append(course.getCourseName());
                             }
                         },
-                        () -> System.out.println("No prerequisites information available for " + course.getCourseName())
+                        () -> output.append("No prerequisites information available for ").append(course.getCourseName())
                 );
+        return output.toString();
     }
       
     public void registerStudentForCourse(student student, course course) {
         if (student == null || course == null) {
             System.out.println("Invalid input: Student or course provided is null.");
+            return;
         }
     
-        
-        List<course> studentCourses = student.getCompletedCourses() ;// Assuming this method exists to get student's enrolled courses
-    
+        // Check for schedule conflicts
+        List<course> studentCourses = student.getCompletedCourses();
         boolean conflictExists = studentCourses.stream()
                 .anyMatch(enrolledCourse -> hasConflict(course, enrolledCourse));
     
         if (conflictExists) {
             System.out.println("There is a schedule conflict. Registration for " + course.getCourseName() + " is not allowed.");
+            return;
         }
     
+        // Check if prerequisites are met
+        boolean prerequisitesMet = checkPrerequisites(course, student);
+        if (!prerequisitesMet) {
+            System.out.println("Student has not met all prerequisites for " + course.getCourseName());
+            return;
+        }
+    
+        // Check if the student is already enrolled
         if (!course.getStudentsEnrolled().contains(student)) {
             student.getCompletedCourses().add(course);
-            course.addStudent(student);     
+            course.addStudent(student);
             System.out.println(student.getName() + " has been registered for " + course.getCourseName());
         } else {
             System.out.println(student.getName() + " is already registered for " + course.getCourseName());
         }
     }
-
-
+    
 
    
 
@@ -270,7 +307,7 @@ public class rigstrar {
  
     public double calculateGPA(student student) {
 
-    Map<course, Double> grades = student.getGradess();
+    Map<course, Double> grades = student.getgradess();
 
     try ( ForkJoinPool forkJoinPool = new ForkJoinPool()){
         
@@ -311,7 +348,6 @@ public class rigstrar {
                 return "Probation";
             }
         } else {
-            // Handle the case where the student is not found
             return "Student not found";
         }
     }
