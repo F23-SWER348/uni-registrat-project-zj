@@ -23,7 +23,7 @@ public class readinggg {
 
   
            rr.readFaculty();
-           
+           //ss
           System.out.println(rr.facultyList.size());
        System.out.println(r.getFacultys().size());
           rr.ReadScheduleFile();
